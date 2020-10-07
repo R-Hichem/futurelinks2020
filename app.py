@@ -7,6 +7,7 @@ import linkpred
 import json
 import networkx as nx
 from helpers import formatNetwork
+from flask_cors import CORS, cross_origin
 
 UPLOAD_FOLDER = 'uploadedNets/'
 ALLOWED_EXTENSIONS = {'net', 'txt'}
@@ -15,6 +16,9 @@ ALLOWED_EXTENSIONS = {'net', 'txt'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = '3d6f45a5fc12445dbac2f59c3b6c7cb1'
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+cors = CORS(app, resources={r"/foo": {"origins": "*"}})
 
 
 def allowed_file(filename):
@@ -73,6 +77,7 @@ def upload_file():
 
 
 @app.route('/example')
+@cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
 def graphExample():
     return jsonify(formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], 'test2.net')))
 
