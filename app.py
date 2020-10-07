@@ -53,16 +53,15 @@ def upload_file():
 
             if num_loops:
                 H.remove_edges_from(nx.selfloop_edges(G))
-                return 'oui'
 
             CommonNeighbours = linkpred.predictors.CommonNeighbours(
                 H, excluded=H.edges())
             CommonNeighbours_results = CommonNeighbours.predict()
             top = CommonNeighbours_results.top()
-            # sentence = ''
-            # for authors, score in top.items():
-            #     sentence = sentence + ("Il existe une relation thématique et chronologique à exploiter entre : \n" + str(authors) + "\n" + "le score (indice de confiance) est :\n" +
-            #                            str(score) + "\n" + "Plus la valeur est supérieure à 1.0 plus la possibilitée de relation entre ces auteurs est forte\n")
+            sentence = []
+            for authors, score in top.items():
+                sentence.append("Il existe une relation thématique et chronologique à exploiter entre : " +
+                                str(authors) + "le score  est :" + str(score))
             jsonDict = []
             for authors, score in top.items():
                 jsonDict.append({
@@ -71,8 +70,12 @@ def upload_file():
                     "score": score
                 })
             # responseDict = {"results": jsonDict}
+            return render_template('generatedGraph.html', predictions=sentence, data=formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
             return jsonify(formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
             return jsonify(jsonDict)
+        else:
+            flash("format inccorecte, veillez sélectionner un fichier .net valide ")
+            return redirect(request.url)
     return render_template('downloads.html')
 
 
@@ -81,6 +84,10 @@ def upload_file():
 def graphExample():
     return jsonify(formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], 'test2.net')))
 
+
+@app.route('/examplevis')
+def visGraph():
+    return render_template('vis.html')
 # @app.route('/file-downloads/')
 # def file_downloads():
 #     try:

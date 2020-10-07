@@ -19,16 +19,16 @@ def formatNetwork(filePath):
         authorName = re.findall(r'"([^"]*)"', node)[0]
         authorId = node.split(' ')[0]
         jsonNodeArray.append({
-            "id": authorId,
+            "id": int(authorId),
             "label": authorName
         })
 
     for edge in edges:
         edgeList = edge.split(' ')
         jsonEdgeArray.append({
-            "from": edgeList[0],
-            "to": edgeList[1],
-            "value": str(float(edgeList[2]))
+            "from": int(edgeList[0]),
+            "to": int(edgeList[1]),
+            "value": float(edgeList[2])
         })
 
     jsonNetwork = {
