@@ -6,7 +6,7 @@ from pprint import pprint
 import linkpred
 import json
 import networkx as nx
-from helpers import formatNetwork
+from helpers import formatNetwork, formatNetwork2, getNodefromLabelFromJson
 from flask_cors import CORS, cross_origin
 
 UPLOAD_FOLDER = 'uploadedNets/'
@@ -44,6 +44,8 @@ def upload_file():
             # return redirect(url_for('uploaded_file',filename=filename))
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            initialGraphJson = formatNetwork2(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename))
             G = linkpred.read_network(os.path.join(
                 app.config['UPLOAD_FOLDER'], filename))
 
@@ -59,10 +61,20 @@ def upload_file():
             CommonNeighbours_results = CommonNeighbours.predict()
             top = CommonNeighbours_results.top()
             sentence = []
+            newLinks = []
+            jsonDict = []
+
             for authors, score in top.items():
                 sentence.append("Il existe une relation thématique et chronologique à exploiter entre : " +
                                 str(authors) + "le score  est :" + str(score))
-            jsonDict = []
+                newLinks.append({
+                    "from": getNodefromLabelFromJson(str(authors[0]), initialGraphJson['nodes'])['id'],
+                    "to": getNodefromLabelFromJson(str(authors[1]), initialGraphJson['nodes'])['id'],
+                    "value": float(1.0)
+                })
+
+            # return json.dumps(newLinks)
+            # newLinks.append([str(authors[0]), str(authors[1])])
             for authors, score in top.items():
                 jsonDict.append({
                     "authorSource": str(authors).split(' - ')[0],
@@ -70,9 +82,7 @@ def upload_file():
                     "score": score
                 })
             # responseDict = {"results": jsonDict}
-            return render_template('generatedGraph.html', predictions=sentence, data=formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-            return jsonify(formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-            return jsonify(jsonDict)
+            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)
