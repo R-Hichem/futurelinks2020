@@ -52,7 +52,6 @@ def upload_file():
             H = G.copy()
 
             num_loops = nx.number_of_selfloops(G)
-
             if num_loops:
                 H.remove_edges_from(nx.selfloop_edges(G))
 
@@ -65,8 +64,8 @@ def upload_file():
             jsonDict = []
 
             for authors, score in top.items():
-                sentence.append("Il existe une relation thématique et chronologique à exploiter entre : " +
-                                str(authors) + "le score  est :" + str(score))
+                sentence.append(
+                    str(authors) + "  le score  est :" + str(score))
                 newLinks.append({
                     "from": getNodefromLabelFromJson(str(authors[0]), initialGraphJson['nodes'])['id'],
                     "to": getNodefromLabelFromJson(str(authors[1]), initialGraphJson['nodes'])['id'],
@@ -82,6 +81,7 @@ def upload_file():
                     "score": score
                 })
             # responseDict = {"results": jsonDict}
+            # return json.dumps(initialGraphJson["edges"])
             return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")

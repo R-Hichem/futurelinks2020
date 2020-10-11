@@ -51,7 +51,7 @@ def formatNetwork2(filePath):
                 jsonEdgeArray.append({
                     "from": int(authorId),
                     "to": int(edge['nodeTo']),
-                    "value": float(edge['data']['weight'])
+                    "value": int(edge['data']['weight'])
                 })
     jsonNetwork = {
         "nodes": jsonNodeArray,
