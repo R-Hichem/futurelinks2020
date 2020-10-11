@@ -7,16 +7,27 @@
       type="text/javascript"
       src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
     ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.16.2/cytoscape.min.js"
+      integrity="sha512-90CUvhfbtRMgSr2cvzgYyGchUg2CtOHMavYdm03huN42UAjWtKhHBsQ+H7K4KGJ4MeS0P9FiZZwC7lxnIl6isg=="
+      crossorigin="anonymous"
+    ></script>
     <style type="text/css">
       #mynetwork {
         width: 600px;
         height: 400px;
         border: 1px solid lightgray;
       }
+      #cy {
+        width: 300px;
+        height: 300px;
+        display: block;
+      }
     </style>
   </head>
   <body>
     <div id="mynetwork"></div>
+    <div id="cy"></div>
     <div>
       <ul>
         {%if predictions|length >1 %}
@@ -38,7 +49,7 @@
       ]
       const myEdges = [
         {% for edge in data.edges %}
-        { from: {{edge.from}}, to: {{edge.to}}},
+        { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}} },
         {% endfor %}
       ]
       var nodes = new vis.DataSet([...myNodes]);
@@ -46,7 +57,7 @@
       var edges = new vis.DataSet([
         ...myEdges,
         {% for edge in newLinks %}
-        { from: {{edge.from}}, to: {{edge.to}},   dashes: false,
+        { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}},  dashes: false,
                 background: {
                   enabled: true,
                   color: "red",
@@ -109,6 +120,54 @@
       var network = new vis.Network(container, data, options);
       network.on("stabilizationIterationsDone", function () {
           network.setOptions( { physics: false } );
+      });
+    </script>
+
+    <script>
+
+      const cytoNodes = [
+        {% for node in data.nodes %}
+        {
+          data : { id: '{{node.id}}', label: "{{node.label}}" }
+        },
+        {% endfor %}
+      ]
+      const cytoEdges = [
+        {% for edge in data.edges %}
+        {
+          data : { id: '{{edge.edgeID}}' , source: '{{edge.from}}', target: '{{edge.to}}' },
+        },
+        {% endfor %}
+      ]
+
+      var cy = cytoscape({
+        container: document.getElementById("cy"), // container to render in
+        elements: {
+          nodes: [...myNodes],
+          edges: [...myEdges]
+          },
+        style: [
+          // the stylesheet for the graph
+          {
+            selector: "node",
+            style: {
+              "background-color": "#666",
+              label: "data(id)",
+            },
+          },
+
+          {
+            selector: "edge",
+            style: {
+              width: 3,
+              "line-color": "#ccc",
+              "target-arrow-color": "#ccc",
+              "target-arrow-shape": "triangle",
+              "curve-style": "bezier",
+            },
+          },
+        ],
+
       });
     </script>
   </body>

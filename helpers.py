@@ -35,7 +35,7 @@ def formatNetwork(filePath):
 
 def formatNetwork2(filePath):
     network = linkpred.read_network(filePath)
-    G = nx.convert_node_labels_to_integers(network, 0, "default", "label")
+    G = nx.convert_node_labels_to_integers(network, 1, "default", "label")
     jsonNodeArray = []
     jsonEdgeArray = []
     for node in json.loads(nx.jit_data(G)):
@@ -51,7 +51,8 @@ def formatNetwork2(filePath):
                 jsonEdgeArray.append({
                     "from": int(authorId),
                     "to": int(edge['nodeTo']),
-                    "value": int(edge['data']['weight'])
+                    "value": int(edge['data']['weight']),
+                    "edgeID": str(authorId)+'to'+str(edge['nodeTo'])
                 })
     jsonNetwork = {
         "nodes": jsonNodeArray,
