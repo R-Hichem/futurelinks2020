@@ -6,8 +6,9 @@ from pprint import pprint
 import linkpred
 import json
 import networkx as nx
-from helpers import formatNetwork, formatNetwork2, getNodefromLabelFromJson
+from helpers import formatNetwork, formatNetwork2, getNodefromLabelFromJson, intersection
 from flask_cors import CORS, cross_origin
+import math
 
 UPLOAD_FOLDER = 'uploadedNets/'
 ALLOWED_EXTENSIONS = {'net', 'txt'}
@@ -60,20 +61,61 @@ def upload_file():
             CommonNeighbours_results = CommonNeighbours.predict()
             top = CommonNeighbours_results.top()
             sentence = []
+            sentenceunsorted = []
             newLinks = []
             jsonDict = []
+            # resultsList = []
+            G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
 
-            for authors, score in top.items():
-                sentence.append(
-                    str(authors) + "  le score  est :" + str(score))
+            CommonNeighboursG = linkpred.predictors.CommonNeighbours(
+                G, excluded=G.edges())
+
+            CommonNeighbours_resultsG = CommonNeighboursG.predict()
+
+            topG = CommonNeighbours_resultsG.top(10)
+
+            # for authors, score in top.items():
+            #     sentence.append(
+            #         str(authors) + "  le score  est :" + str(score))
+            #     newLinks.append({
+            #         "from": getNodefromLabelFromJson(str(authors[0]), initialGraphJson['nodes'])['id'],
+            #         "to": getNodefromLabelFromJson(str(authors[1]), initialGraphJson['nodes'])['id'],
+            #         "value": float(1.0)
+            #     })
+
+            for authors, score in topG.items():
+                authorsArray = [authors[0], authors[1]]
+                common = intersection(
+                    list(G.neighbors(authors[0])), list(G.neighbors(authors[1]))) + authorsArray
+                subG = G.subgraph(common)
+                cngfScore = 0
+                for nodeID, nodeInfo in subG.nodes(data=True):
+
+                    if nodeID not in authorsArray:
+                        cngfScore = cngfScore + \
+                            (subG.degree[nodeID] /
+                             math.log10(G.degree[nodeID]))
+
+                authorOne = G.nodes[authorsArray[1]]
+                authorTwo = G.nodes[authorsArray[0]]
+                sentenceunsorted.append({
+                    "text": authorOne['label'] + " - " + authorTwo['label'] +
+                    "  le score  est :" + str(cngfScore),
+                    "score": cngfScore
+                })
                 newLinks.append({
-                    "from": getNodefromLabelFromJson(str(authors[0]), initialGraphJson['nodes'])['id'],
-                    "to": getNodefromLabelFromJson(str(authors[1]), initialGraphJson['nodes'])['id'],
+                    "from": authorOne['id'],
+                    "to": authorTwo['id'],
                     "value": float(1.0)
                 })
 
             # return json.dumps(newLinks)
             # newLinks.append([str(authors[0]), str(authors[1])])
+
+            sentenceunsorted = sorted(
+                sentenceunsorted, key=lambda i: i['score'], reverse=True)
+            for s in sentenceunsorted:
+                sentence.append(s['text'])
             for authors, score in top.items():
                 jsonDict.append({
                     "authorSource": str(authors).split(' - ')[0],
