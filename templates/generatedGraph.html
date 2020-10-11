@@ -30,74 +30,70 @@
       <ul></ul>
     </div>
     <script type="text/javascript">
-
-
-                // create an array with nodes
-                var nodes = new vis.DataSet([
-                  {% for node in data.nodes %}
-                  { id: {{node.id}}, label: "{{node.label}}" },
-                  {% endfor %}
-                ]);
-
-                // create an array with edges
-                var edges = new vis.DataSet([
-                  {% for edge in data.edges %}
-                  { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}} },
-                  {% endfor %}
-
-                  {% for edge in newLinks %}
-                  { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}},  dashes: false,
+      // create an array with nodes
+      var nodes = new vis.DataSet([
+        {% for node in data.nodes %}
+        { id: {{node.id}}, label: "{{node.label}}" },
+        {% endfor %}
+      ]);
+      // create an array with edges
+      var edges = new vis.DataSet([
+        {% for edge in data.edges %}
+        { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}} },
+        {% endfor %}
+        {% for edge in newLinks %}
+        { from: {{edge.from}}, to: {{edge.to}}, value: {{edge.value}},  dashes: false,
                 background: {
                   enabled: true,
                   color: "red",
                   size: 10,
                   dashes: [20, 10],
                 }, },
-                  {% endfor %}
-                ]);
+        {% endfor %}
+      ]);
 
-                // create a network
-                var container = document.getElementById("mynetwork");
-                var data = {
-                  nodes: nodes,
-                  edges: edges,
-                };
-               var options = {
-              nodes: {
-                shape: "dot",
-                // scaling: {
-                //   customScalingFunction: function (min, max, total, value) {
-                //     return value / total;
-                //   },
-                //   min: 5,
-                //   max: 150,
-                // },
-              },
-              // edges: {
-              //   shadow: true,
-              //   smooth: true,
-              //   background: {
-              //     enabled: true,
-              //     color: "green",
-              //   },
-              // },
-              physics: {
-                  forceAtlas2Based: {
-                    gravitationalConstant: -26,
-                    centralGravity: 0.005,
-                    springLength: 230,
-                    springConstant: 0.18,
-                  },
-                  maxVelocity: 146,
-                  solver: "forceAtlas2Based",
-                  timestep: 0.35,
-                  stabilization: { iterations: 120 },
-                },
-            };
+      // create a network
+      var container = document.getElementById("mynetwork");
+      var data = {
+          nodes: nodes,
+          edges: edges,
+        };
+      var options = {
+        nodes: {
+          shape: "dot",
+          // scaling: {
+          //   customScalingFunction: function (min, max, total, value) {
+          //     return value / total;
+          //   },
+          //   min: 5,
+          //   max: 150,
+          // },
+        },
+        // edges: {
+        //   shadow: true,
+        //   smooth: true,
+        //   background: {
+        //     enabled: true,
+        //     color: "green",
+        //   },
+        // },
+        physics: {
+            forceAtlas2Based: {
+              gravitationalConstant: -26,
+              centralGravity: 0.005,
+              springLength: 230,
+              springConstant: 0.18,
+            },
+            maxVelocity: 146,
+            solver: "forceAtlas2Based",
+            timestep: 0.35,
+            stabilization: { iterations: 120 },
+          },
+        };
       var network = new vis.Network(container, data, options);
-      network.on("stabilizationIterationsDone", function () {
-          network.setOptions( { physics: false } );
-      });
+      // network.on("stabilizationIterationsDone", function () {
+      //     network.setOptions( { physics: false } );
+      // });
     </script>
   </body>
 </html>

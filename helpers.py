@@ -62,3 +62,12 @@ def formatNetwork2(filePath):
 
 def getNodefromLabelFromJson(string, nodesList):
     return next((x for x in nodesList if x['label'] == string), None)
+
+
+def getSubGraphNodes(G, nodeOne, nodeTwo):
+    paths_between_generator = nx.all_simple_paths(
+        G=G, source=nodeOne, target=nodeTwo)
+    nodes_between_set = {
+        node for path in paths_between_generator for node in path}
+    SG = G.subgraph(nodes_between_set)
+    return SG
