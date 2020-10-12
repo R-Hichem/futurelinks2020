@@ -384,7 +384,7 @@
         });
         var filename = '{{filename}}'.split('.net')[0];
         downloadFileAsPajet = () => {
-        axios.post('https://futurelinks.herokuapp.com/downloadAsPajet',{
+        axios.post('http://localhost:5000/downloadAsPajet',{
             responseType: 'blob', // important
             data:{
               attribute: "value",

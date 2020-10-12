@@ -162,10 +162,12 @@ def downloadAsPajet():
     G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
 
     for newConnection in data['newConnections']:
-        G.add_edge(newConnection['from'], newConnection['to'], weight=1.0)
+        source = G.nodes[int(newConnection['from'])]['label']
+        target = G.nodes[int(newConnection['to'])]['label']
+        H.add_edge(source, target, weight=1.0)
 
     path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
-    nx.write_pajek(G, path)
+    nx.write_pajek(H, path)
     return send_file(path)
 
 
