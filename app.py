@@ -106,12 +106,16 @@ def upload_file():
                 newLinks.append({
                     "from": authorOne['id'],
                     "to": authorTwo['id'],
-                    "value": float(1.0)
+                    "value": float(1.0),
+                    "authOne": authorOne,
+                    "authTwo": authorTwo,
+                    "score": cngfScore
                 })
 
             # return json.dumps(newLinks)
             # newLinks.append([str(authors[0]), str(authors[1])])
 
+            newLinks = sorted(newLinks, key=lambda i: i['score'], reverse=True)
             sentenceunsorted = sorted(
                 sentenceunsorted, key=lambda i: i['score'], reverse=True)
             for s in sentenceunsorted:
@@ -119,11 +123,11 @@ def upload_file():
             for authors, score in top.items():
                 jsonDict.append({
                     "authorSource": str(authors).split(' - ')[0],
-                    "authorDest": str(authors).split(' - ')[0],
-                    "score": score
+                    "authorDest": str(authors).split(' - ')[1],
+                    "score": cngfScore
                 })
             # responseDict = {"results": jsonDict}
-            # return json.dumps(initialGraphJson["edges"])
+            # return json.dumps(newLinks)
             return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")

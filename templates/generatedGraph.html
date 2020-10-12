@@ -7,108 +7,212 @@
       type="text/javascript"
       src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
     ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
     <style type="text/css">
       #mynetwork {
         width: 600px;
         height: 400px;
         border: 1px solid lightgray;
       }
+      .author__block p {
+        display: inline;
+      }
+      .author__label {
+        color: blue;
+      }
+      .author__label:hover {
+        color: green;
+        font-weight: bold;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <div id="mynetwork"></div>
+    <button onclick="fitNetwork()">Rest layout</button>
+    <button onclick="togglePhysics()">Toggle physics</button>
+    <input id="autoComplete" tabindex="1" />
     <div>
       <ul>
-        {%if predictions|length >1 %}
+        {%if newLinks|length >1 %}
         <h3>Il existe une relation à exploiter entre :</h3>
-        {% for prediction in predictions %}
-        <li>{{prediction}}</li>
+        {% for newLink in newLinks %}
+        <li>
+          <div class="author__block">
+            <p
+              class="author__label"
+              onclick="focusNode({{newLink['authOne']['id']}})"
+            >
+              {{newLink['authOne']['label']}}
+            </p>
+            <p class="author__link">==></p>
+            <p
+              class="author__label"
+              onclick="focusNode({{newLink['authTwo']['id']}})"
+            >
+              {{newLink['authTwo']['label']}}
+            </p>
+            avec un score de : <b> {{newLink['score']}}</b>
+          </div>
+        </li>
         {% endfor %} {% endif %}
       </ul>
     </div>
-    <div>
-      <ul></ul>
-    </div>
     <script type="text/javascript">
-      // create an array with nodes
-      const myNodes = [
-        {% for node in data.nodes %}
-        { id: {{node.id}}, label: "{{node.label}}" },
-        {% endfor %}
-      ]
-      const myEdges = [
-        {% for edge in data.edges %}
-        { from: {{edge.from}}, to: {{edge.to}}},
-        {% endfor %}
-      ]
-      var nodes = new vis.DataSet([...myNodes]);
-      // create an array with edges
-      var edges = new vis.DataSet([
-        ...myEdges,
-        {% for edge in newLinks %}
-        { from: {{edge.from}}, to: {{edge.to}},   dashes: false,
-                background: {
-                  enabled: true,
-                  color: "red",
-                  size: 10,
-                  dashes: [20, 10],
-                }, },
-        {% endfor %}
-      ]);
+              // create an array with nodes
+              const myNodes = [
+                {% for node in data.nodes %}
+                { id: {{node.id}}, label: "{{node.label}}" },
+                {% endfor %}
+              ]
+              const myEdges = [
+                {% for edge in data.edges %}
+                { from: {{edge.from}}, to: {{edge.to}}},
+                {% endfor %}
+              ]
+              var nodes = new vis.DataSet([...myNodes]);
+              // create an array with edges
+              var edges = new vis.DataSet([
+                ...myEdges,
+                {% for edge in newLinks %}
+                { from: {{edge.from}}, to: {{edge.to}},   dashes: false,
+                        background: {
+                          enabled: true,
+                          color: "red",
+                          size: 10,
+                          dashes: [20, 10],
+                        }, },
+                {% endfor %}
+              ]);
 
-      // create a network
-      var container = document.getElementById("mynetwork");
-      var data = {
-          nodes: nodes,
-          edges: edges,
-        };
-      var options = {
-        nodes: {
-          shape: "dot",
-          // scaling: {
-          //   customScalingFunction: function (min, max, total, value) {
-          //     return value / total;
-          //   },
-          //   min: 5,
-          //   max: 150,
-          // },
-        },
-        // edges: {
-        //   shadow: true,
-        //   smooth: true,
-        //   background: {
-        //     enabled: true,
-        //     color: "green",
-        //   },
-        // },
-        edges: {
-          arrows: {
-            to: {
-              enabled: true,
-              // imageHeight: undefined,
-              // imageWidth: undefined,
-              // scaleFactor: 1,
-              // src: undefined,
-              type: "arrow"
-            },
-          }
-        },
-        physics: {
-            forceAtlas2Based: {
-              gravitationalConstant: -26,
-              centralGravity: 0.005,
-              springLength: 230,
-              springConstant: 0.18,
-            },
-            maxVelocity: 146,
-            solver: "forceAtlas2Based",
-            timestep: 0.35,
-            stabilization: { iterations: 300 },
+              // create a network
+              var container = document.getElementById("mynetwork");
+              var data = {
+                  nodes: nodes,
+                  edges: edges,
+                };
+              var options = {
+                nodes: {
+                  shape: "dot",
+                  // scaling: {
+                  //   customScalingFunction: function (min, max, total, value) {
+                  //     return value / total;
+                  //   },
+                  //   min: 5,
+                  //   max: 150,
+                  // },
+                },
+                // edges: {
+                //   shadow: true,
+                //   smooth: true,
+                //   background: {
+                //     enabled: true,
+                //     color: "green",
+                //   },
+                // },
+                edges: {
+                  arrows: {
+                    to: {
+                      enabled: true,
+                      // imageHeight: undefined,
+                      // imageWidth: undefined,
+                      // scaleFactor: 1,
+                      // src: undefined,
+                      type: "arrow"
+                    },
+                  }
+                },
+                physics: {
+                    forceAtlas2Based: {
+                      gravitationalConstant: -26,
+                      centralGravity: 0.005,
+                      springLength: 230,
+                      springConstant: 0.18,
+                    },
+                    maxVelocity: 146,
+                    solver: "forceAtlas2Based",
+                    timestep: 0.35,
+                    stabilization: { iterations: 300 },
+                  },
+                };
+              var network = new vis.Network(container, data, options);
+              network.on("stabilizationIterationsDone", function () {
+                  network.setOptions( { physics: false } );
+              });
+
+              focusNode = (id) => {
+               network.focus(id ,{
+                scale: 1,
+                animation: { // -------------------> can be a boolean too!
+                    duration: 1000,
+                    easingFunction: "easeInOutQuad",
+                }
+              })
+              }
+            fitNetwork = () => {
+              network.fit({animation:{
+                offset: { x: 0, y: 0 },
+                duration: 300,
+                easingFunction: 'easeInOutQuad',
+              }})
+            }
+
+            showNode = (id) => {
+              fitNetwork();
+              setTimeout(() => focusNode(id), 300)
+            }
+
+            togglePhysics = () => {
+              network.physics.physicsEnabled ? network.setOptions({
+                physics: false
+                }
+              ) : network.setOptions({
+                physics: true
+                }
+              )
+            }
+
+
+            new autoComplete({
+          data: {                              // Data src [Array, Function, Async] | (REQUIRED)
+            src:  myNodes,
+            key: ["label"],
+            cache: false
           },
-        };
-      var network = new vis.Network(container, data, options);
-      network.on("stabilizationIterationsDone", function () {
-          network.setOptions( { physics: false } );
+
+
+          placeHolder: "Chercher un noeud.",     // Place Holder text                 | (Optional)
+          selector: "#autoComplete",           // Input field selector              | (Optional)
+          threshold: 3,                        // Min. Chars length to start Engine | (Optional)
+          debounce: 300,                       // Post duration for engine to start | (Optional)
+          searchEngine: "loose",              // Search Engine type/mode           | (Optional)
+          resultsList: {                       // Rendered results list object      | (Optional)
+              render: true,
+              /* if set to false, add an eventListener to the selector for event type
+                 "autoComplete" to handle the result */
+              container: source => {
+                  source.setAttribute("id", "food_list");
+              },
+              destination: document.querySelector("#autoComplete"),
+              position: "afterend",
+              element: "ul"
+          },
+          maxResults: 5,                         // Max. number of rendered results | (Optional)
+          highlight: true,                       // Highlight matching results      | (Optional)
+          resultItem: {                          // Rendered result item            | (Optional)
+              content: (data, source) => {
+                  source.innerHTML = data.match;
+              },
+              element: "li"
+          },
+          onSelection: feedback => {             // Action script onSelection event | (Optional)
+              console.log(feedback.selection.value.id);
+              showNode(feedback.selection.value.id)
+          }
       });
     </script>
   </body>
