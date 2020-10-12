@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, Response, jsonify
+from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file
 from werkzeug.utils import secure_filename
 from flask import render_template
 from pprint import pprint
@@ -166,7 +166,7 @@ def downloadAsPajet():
 
     path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
     nx.write_pajek(G, path)
-    return json.dumps("tout va bien")
+    return send_file(path)
 
 
 # @app.route('/file-downloads/')
