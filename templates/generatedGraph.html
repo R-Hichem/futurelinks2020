@@ -12,12 +12,23 @@
       href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style type="text/css">
-      #mynetwork {
+      .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .network__container {
+        display: flex;
+      }
+      /* #mynetwork {
         width: 600px;
         height: 400px;
         border: 1px solid lightgray;
-      }
+      } */
       .author__block p {
         display: inline;
       }
@@ -29,38 +40,164 @@
         font-weight: bold;
         cursor: pointer;
       }
+      .container__search {
+        padding-top: 20px;
+      }
+
+      #mynetwork {
+        width: 600px;
+        height: 400px;
+        border: 1px solid lightgray;
+      }
+      #loadingBar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 602px;
+        height: 402px;
+        background-color: rgba(200, 200, 200, 0.8);
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -ms-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        opacity: 1;
+      }
+      #wrapper {
+        position: relative;
+        width: 600px;
+        height: 400px;
+      }
+
+      #text {
+        position: absolute;
+        left: 330px;
+        width: 30px;
+        height: 50px;
+        margin: auto auto auto auto;
+        font-size: 22px;
+        color: #000000;
+      }
+
+      div.outerBorder {
+        position: relative;
+        top: 200px;
+        width: 300px;
+        height: 24px;
+        margin: auto auto auto auto;
+        border: 8px solid rgba(0, 0, 0, 0.1);
+        background: rgb(252, 252, 252); /* Old browsers */
+        background: -moz-linear-gradient(
+          top,
+          rgba(252, 252, 252, 1) 0%,
+          rgba(237, 237, 237, 1) 100%
+        ); /* FF3.6+ */
+        background: -webkit-gradient(
+          linear,
+          left top,
+          left bottom,
+          color-stop(0%, rgba(252, 252, 252, 1)),
+          color-stop(100%, rgba(237, 237, 237, 1))
+        ); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(
+          top,
+          rgba(252, 252, 252, 1) 0%,
+          rgba(237, 237, 237, 1) 100%
+        ); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(
+          top,
+          rgba(252, 252, 252, 1) 0%,
+          rgba(237, 237, 237, 1) 100%
+        ); /* Opera 11.10+ */
+        background: -ms-linear-gradient(
+          top,
+          rgba(252, 252, 252, 1) 0%,
+          rgba(237, 237, 237, 1) 100%
+        ); /* IE10+ */
+        background: linear-gradient(
+          to bottom,
+          rgba(252, 252, 252, 1) 0%,
+          rgba(237, 237, 237, 1) 100%
+        ); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+        border-radius: 72px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      #border {
+        position: absolute;
+        left: 10px;
+        width: 300px;
+        height: 23px;
+        margin: auto auto auto auto;
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      #bar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 20px;
+        height: 20px;
+        margin: auto auto auto auto;
+        border-radius: 11px;
+        border: 2px solid rgba(30, 30, 30, 0.05);
+        background: rgb(0, 173, 246); /* Old browsers */
+        box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.4);
+      }
     </style>
   </head>
   <body>
-    <div id="mynetwork"></div>
-    <button onclick="fitNetwork()">Rest layout</button>
-    <button onclick="togglePhysics()">Toggle physics</button>
-    <input id="autoComplete" tabindex="1" />
-    <div>
-      <ul>
-        {%if newLinks|length >1 %}
-        <h3>Il existe une relation à exploiter entre :</h3>
-        {% for newLink in newLinks %}
-        <li>
-          <div class="author__block">
-            <p
-              class="author__label"
-              onclick="focusNode({{newLink['authOne']['id']}})"
-            >
-              {{newLink['authOne']['label']}}
-            </p>
-            <p class="author__link">==></p>
-            <p
-              class="author__label"
-              onclick="focusNode({{newLink['authTwo']['id']}})"
-            >
-              {{newLink['authTwo']['label']}}
-            </p>
-            avec un score de : <b> {{newLink['score']}}</b>
+    <div class="container">
+      <div id="wrapper">
+        <div id="mynetwork"></div>
+        <div id="loadingBar">
+          <div class="outerBorder">
+            <div id="text">0%</div>
+            <div id="border">
+              <div id="bar"></div>
+            </div>
           </div>
-        </li>
-        {% endfor %} {% endif %}
-      </ul>
+        </div>
+      </div>
+
+      <div class="container__search">
+        <input id="autoComplete" tabindex="1" />
+      </div>
+      <div class="container__buttons">
+        <button onclick="fitNetwork()">Rest layout</button>
+        <button onclick="togglePhysics()">Toggle physics</button>
+        <button onclick="downloadFileAsPajet()">Download as .net</button>
+      </div>
+      <div>
+        <div>
+          <ul>
+            {%if newLinks|length >1 %}
+            <h3>Il existe une relation à exploiter entre :</h3>
+            {% for newLink in newLinks %}
+            <li>
+              <div class="author__block">
+                <p
+                  class="author__label"
+                  onclick="focusNode({{newLink['authOne']['id']}})"
+                >
+                  {{newLink['authOne']['label']}}
+                </p>
+                <p class="author__link">==></p>
+                <p
+                  class="author__label"
+                  onclick="focusNode({{newLink['authTwo']['id']}})"
+                >
+                  {{newLink['authTwo']['label']}}
+                </p>
+                avec un score de : <b> {{newLink['score']}}</b>
+              </div>
+            </li>
+            {% endfor %} {% endif %}
+          </ul>
+        </div>
+      </div>
     </div>
     <script type="text/javascript">
               // create an array with nodes
@@ -73,12 +210,11 @@
                 {% for edge in data.edges %}
                 { from: {{edge.from}}, to: {{edge.to}}},
                 {% endfor %}
-              ]
-              var nodes = new vis.DataSet([...myNodes]);
-              // create an array with edges
-              var edges = new vis.DataSet([
-                ...myEdges,
+              ];
+
+              const newConnections = [
                 {% for edge in newLinks %}
+
                 { from: {{edge.from}}, to: {{edge.to}},   dashes: false,
                         background: {
                           enabled: true,
@@ -87,7 +223,17 @@
                           dashes: [20, 10],
                         }, },
                 {% endfor %}
-              ]);
+              ];
+
+              const myNewEdges = [
+                ...myEdges,
+                ...newConnections
+              ];
+
+
+              var nodes = new vis.DataSet(myNodes);
+              // create an array with edges
+              var edges = new vis.DataSet(myNewEdges);
 
               // create a network
               var container = document.getElementById("mynetwork");
@@ -147,7 +293,7 @@
               focusNode = (id) => {
                network.focus(id ,{
                 scale: 1,
-                animation: { // -------------------> can be a boolean too!
+                animation: {
                     duration: 1000,
                     easingFunction: "easeInOutQuad",
                 }
@@ -210,10 +356,50 @@
               element: "li"
           },
           onSelection: feedback => {             // Action script onSelection event | (Optional)
-              console.log(feedback.selection.value.id);
+              // console.log(feedback.selection.value.id);
               showNode(feedback.selection.value.id)
           }
       });
+
+
+
+      network.on("stabilizationProgress", function (params) {
+          var maxWidth = 300;
+          var minWidth = 20;
+          var widthFactor = params.iterations / params.total;
+          var width = Math.max(minWidth, maxWidth * widthFactor);
+
+          document.getElementById("bar").style.width = width + "px";
+          document.getElementById("text").innerHTML =
+            Math.round(widthFactor * 100) + "%";
+        });
+        network.once("stabilizationIterationsDone", function () {
+          document.getElementById("text").innerHTML = "100%";
+          document.getElementById("bar").style.width = "300px";
+          document.getElementById("loadingBar").style.opacity = 0;
+          // really clean the dom element
+          setTimeout(function () {
+            document.getElementById("loadingBar").style.display = "none";
+          }, 500);
+        });
+        var filename = '{{filename}}'.split('.net')[0];
+        downloadFileAsPajet = () => {
+        axios.post('http://localhost:5000/downloadAsPajet',{
+            responseType: 'blob', // important
+            data:{
+              attribute: "value",
+              newConnections : newConnections,
+              filename: '{{filename}}',
+            }
+          }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename+'FutureLinks.net');
+            document.body.appendChild(link);
+            link.click();
+          });
+      }
     </script>
   </body>
 </html>

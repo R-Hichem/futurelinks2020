@@ -128,7 +128,7 @@ def upload_file():
                 })
             # responseDict = {"results": jsonDict}
             # return json.dumps(newLinks)
-            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson)
+            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)
@@ -144,6 +144,31 @@ def graphExample():
 @app.route('/examplevis')
 def visGraph():
     return render_template('vis.html')
+
+
+@app.route('/downloadAsPajet', methods=['POST'])
+def downloadAsPajet():
+    data = request.json["data"]
+    filename = data['filename']
+    G = linkpred.read_network(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename))
+
+    H = G.copy()
+
+    num_loops = nx.number_of_selfloops(G)
+    if num_loops:
+        H.remove_edges_from(nx.selfloop_edges(G))
+
+    G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+
+    for newConnection in data['newConnections']:
+        G.add_edge(newConnection['from'], newConnection['to'], weight=1.0)
+
+    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
+    nx.write_pajek(G, path)
+    return json.dumps("tout va bien")
+
+
 # @app.route('/file-downloads/')
 # def file_downloads():
 #     try:
