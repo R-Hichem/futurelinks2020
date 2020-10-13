@@ -18,6 +18,7 @@ load_dotenv('.env')
 UPLOAD_FOLDER = 'uploadedNets/'
 ALLOWED_EXTENSIONS = {'net', 'txt'}
 APP_URL = os.environ.get('APP_URl')
+DL_AS_NET_URL = os.environ.get('APP_URl')+'/downloadAsPajet'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -133,7 +134,7 @@ def upload_file():
                 })
             # responseDict = {"results": jsonDict}
             # return json.dumps(newLinks)
-            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename, APP_URL=APP_URL)
+            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename, DL_AS_NET_URL=DL_AS_NET_URL)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)
