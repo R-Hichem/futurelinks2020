@@ -9,10 +9,15 @@ import networkx as nx
 from helpers import formatNetwork, formatNetwork2, getNodefromLabelFromJson, intersection
 from flask_cors import CORS, cross_origin
 import math
+from dotenv import load_dotenv
+from mypred import linkpred as mypred
+
+
+load_dotenv('.env')
 
 UPLOAD_FOLDER = 'uploadedNets/'
 ALLOWED_EXTENSIONS = {'net', 'txt'}
-
+APP_URL = os.environ.get('APP_URl')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -56,7 +61,7 @@ def upload_file():
             if num_loops:
                 H.remove_edges_from(nx.selfloop_edges(G))
 
-            CommonNeighbours = linkpred.predictors.CommonNeighbours(
+            CommonNeighbours = mypred.predictors.CommonNeighboursGF(
                 H, excluded=H.edges())
             CommonNeighbours_results = CommonNeighbours.predict()
             top = CommonNeighbours_results.top()
@@ -67,12 +72,12 @@ def upload_file():
             # resultsList = []
             G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
 
-            CommonNeighboursG = linkpred.predictors.CommonNeighbours(
+            CommonNeighboursG = mypred.predictors.CommonNeighboursGF(
                 G, excluded=G.edges())
 
             CommonNeighbours_resultsG = CommonNeighboursG.predict()
 
-            topG = CommonNeighbours_resultsG.top(10)
+            topG = CommonNeighbours_resultsG.top()
 
             # for authors, score in top.items():
             #     sentence.append(
@@ -115,9 +120,9 @@ def upload_file():
             # return json.dumps(newLinks)
             # newLinks.append([str(authors[0]), str(authors[1])])
 
-            newLinks = sorted(newLinks, key=lambda i: i['score'], reverse=True)
-            sentenceunsorted = sorted(
-                sentenceunsorted, key=lambda i: i['score'], reverse=True)
+            # newLinks = sorted(newLinks, key=lambda i: i['score'], reverse=True)
+            # sentenceunsorted = sorted(
+            #     sentenceunsorted, key=lambda i: i['score'], reverse=True)
             for s in sentenceunsorted:
                 sentence.append(s['text'])
             for authors, score in top.items():
@@ -128,7 +133,7 @@ def upload_file():
                 })
             # responseDict = {"results": jsonDict}
             # return json.dumps(newLinks)
-            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename)
+            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename, APP_URL=APP_URL)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)
@@ -167,6 +172,31 @@ def downloadAsPajet():
         H.add_edge(source, target, weight=1.0)
 
     path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
+    nx.write_pajek(H, path)
+    return send_file(path)
+
+
+@app.route('/downloadAsCSV', methods=['POST'])
+def downloadAsCSV():
+    data = request.json["data"]
+    filename = data['filename']
+    G = linkpred.read_network(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename))
+
+    H = G.copy()
+
+    num_loops = nx.number_of_selfloops(G)
+    if num_loops:
+        H.remove_edges_from(nx.selfloop_edges(G))
+
+    G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+
+    for newConnection in data['newConnections']:
+        source = G.nodes[int(newConnection['from'])]['label']
+        target = G.nodes[int(newConnection['to'])]['label']
+        H.add_edge(source, target, weight=1.0)
+
+    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.csv'
     nx.write_pajek(H, path)
     return send_file(path)
 

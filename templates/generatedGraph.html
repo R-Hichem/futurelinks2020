@@ -169,6 +169,7 @@
         <button onclick="fitNetwork()">Rest layout</button>
         <button onclick="togglePhysics()">Toggle physics</button>
         <button onclick="downloadFileAsPajet()">Download as .net</button>
+        <button onclick="downloadFileAsCSV()">Download as .csv</button>
       </div>
       <div>
         <div>
@@ -384,7 +385,7 @@
         });
         var filename = '{{filename}}'.split('.net')[0];
         downloadFileAsPajet = () => {
-        axios.post('http://localhost:5000/downloadAsPajet',{
+        axios.post('{{APP_URL}}/downloadAsPajet',{
             responseType: 'blob', // important
             data:{
               attribute: "value",
@@ -396,6 +397,23 @@
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', filename+'FutureLinks.net');
+            document.body.appendChild(link);
+            link.click();
+          });
+      }
+        downloadFileAsCSV = () => {
+        axios.post('{{APP_URL}}/downloadAsCSV',{
+            responseType: 'blob', // important
+            data:{
+              attribute: "value",
+              newConnections : newConnections,
+              filename: '{{filename}}',
+            }
+          }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename+'FutureLinks.csv');
             document.body.appendChild(link);
             link.click();
           });
