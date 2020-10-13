@@ -18,7 +18,7 @@ load_dotenv('.env')
 UPLOAD_FOLDER = 'uploadedNets/'
 ALLOWED_EXTENSIONS = {'net', 'txt'}
 APP_URL = os.environ.get('APP_URl')
-DL_AS_NET_URL = os.environ.get('APP_URl')+'/downloadAsPajet'
+DL_AS_NET_URL = str(os.environ.get('APP_URl')) + '/downloadAsPajet'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
