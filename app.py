@@ -134,7 +134,12 @@ def upload_file():
                 })
             # responseDict = {"results": jsonDict}
             # return json.dumps(newLinks)
-            return render_template('generatedGraph.html', newLinks=newLinks, predictions=sentence, data=initialGraphJson, filename=filename, DL_AS_NET_URL=DL_AS_NET_URL)
+            return render_template('generatedGraph.html',
+                                   newLinks=newLinks,
+                                   predictions=sentence,
+                                   data=initialGraphJson,
+                                   filename=filename,
+                                   DL_AS_NET_URL=DL_AS_NET_URL)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)
