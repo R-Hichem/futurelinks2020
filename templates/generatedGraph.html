@@ -204,7 +204,7 @@
               // create an array with nodes
               var filename = '{{filename}}'.split('.net')[0];
         downloadFileAsPajet = () => {
-        axios.post('{{DL_AS_NET_URL}}',{
+        axios.post('https://futurelinks.herokuapp.com/downloadAsPajet',{
             responseType: 'blob', // important
             data:{
               attribute: "value",
