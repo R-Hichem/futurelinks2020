@@ -1,0 +1,175 @@
+import os
+from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file
+from werkzeug.utils import secure_filename
+from flask import render_template
+from pprint import pprint
+import linkpred
+import json
+import networkx as nx
+from helpers import formatNetwork, formatNetwork2, getNodefromLabelFromJson, intersection
+from flask_cors import CORS, cross_origin
+import math
+from dotenv import load_dotenv
+from mypred import linkpred as mypred
+
+
+load_dotenv('.env')
+
+UPLOAD_FOLDER = 'uploadedNets/'
+ALLOWED_EXTENSIONS = {'net', 'txt'}
+APP_URL = os.environ.get('APP_URl')
+DL_AS_NET_URL = str(os.environ.get('APP_URl')) + '/downloadAsPajet'
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SECRET_KEY'] = '3d6f45a5fc12445dbac2f59c3b6c7cb1'
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+cors = CORS(app, resources={r"/foo": {"origins": "*"}})
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/graph', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            initialGraphJson = formatNetwork2(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename))
+            G = linkpred.read_network(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename))
+            H = G.copy()
+            num_loops = nx.number_of_selfloops(G)
+            if num_loops:
+                H.remove_edges_from(nx.selfloop_edges(G))
+
+            CommonNeighbours = mypred.predictors.CommonNeighboursGF(
+                H, excluded=H.edges())
+            CommonNeighbours_results = CommonNeighbours.predict()
+            top = CommonNeighbours_results.top()
+            sentence = []
+            sentenceunsorted = []
+            newLinks = []
+            jsonDict = []
+            # resultsList = []
+            G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+            CommonNeighboursG = mypred.predictors.CommonNeighboursGF(
+                G, excluded=G.edges())
+            CommonNeighbours_resultsG = CommonNeighboursG.predict()
+            topG = CommonNeighbours_resultsG.top()
+            for authors, score in topG.items():
+                authorsArray = [authors[0], authors[1]]
+                common = intersection(
+                    list(G.neighbors(authors[0])), list(G.neighbors(authors[1]))) + authorsArray
+                subG = G.subgraph(common)
+                cngfScore = 0
+                for nodeID, nodeInfo in subG.nodes(data=True):
+
+                    if nodeID not in authorsArray:
+                        cngfScore = cngfScore + \
+                            (subG.degree[nodeID] /
+                             math.log10(G.degree[nodeID]))
+
+                authorOne = G.nodes[authorsArray[1]]
+                authorTwo = G.nodes[authorsArray[0]]
+                sentenceunsorted.append({
+                    "text": authorOne['label'] + " - " + authorTwo['label'] +
+                    "  le score  est :" + str(cngfScore),
+                    "score": cngfScore
+                })
+                newLinks.append({
+                    "from": authorOne['id'],
+                    "to": authorTwo['id'],
+                    "value": float(1.0),
+                    "authOne": authorOne,
+                    "authTwo": authorTwo,
+                    "score": cngfScore
+                })
+            for s in sentenceunsorted:
+                sentence.append(s['text'])
+            for authors, score in top.items():
+                jsonDict.append({
+                    "authorSource": str(authors).split(' - ')[0],
+                    "authorDest": str(authors).split(' - ')[1],
+                    "score": cngfScore
+                })
+            # responseDict = {"results": jsonDict}
+            # return json.dumps(newLinks)
+            return render_template('generatedGraph.html',
+                                   newLinks=newLinks,
+                                   predictions=sentence,
+                                   data=initialGraphJson,
+                                   filename=filename,
+                                   DL_AS_NET_URL=DL_AS_NET_URL)
+        else:
+            flash("format inccorecte, veillez sélectionner un fichier .net valide ")
+            return redirect(request.url)
+    return render_template('downloads.html')
+
+
+@app.route('/example')
+@cross_origin(origin='localhost', headers=['Content- Type', 'Authorization'])
+def graphExample():
+    return jsonify(formatNetwork(os.path.join(app.config['UPLOAD_FOLDER'], 'test2.net')))
+
+
+@app.route('/examplevis')
+def visGraph():
+    return render_template('vis.html')
+
+
+@app.route('/downloadAsPajet', methods=['POST'])
+def downloadAsPajet():
+    data = request.json["data"]
+    filename = data['filename']
+    G = linkpred.read_network(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename))
+    H = G.copy()
+    num_loops = nx.number_of_selfloops(G)
+    if num_loops:
+        H.remove_edges_from(nx.selfloop_edges(G))
+    G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+    for newConnection in data['newConnections']:
+        source = G.nodes[int(newConnection['from'])]['label']
+        target = G.nodes[int(newConnection['to'])]['label']
+        H.add_edge(source, target, weight=1.0)
+    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
+    nx.write_pajek(H, path)
+    return send_file(path)
+
+
+@app.route('/downloadAsCSV', methods=['POST'])
+def downloadAsCSV():
+    data = request.json["data"]
+    filename = data['filename']
+    G = linkpred.read_network(os.path.join(
+        app.config['UPLOAD_FOLDER'], filename))
+    H = G.copy()
+    num_loops = nx.number_of_selfloops(G)
+    if num_loops:
+        H.remove_edges_from(nx.selfloop_edges(G))
+    G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+    for newConnection in data['newConnections']:
+        source = G.nodes[int(newConnection['from'])]['label']
+        target = G.nodes[int(newConnection['to'])]['label']
+        H.add_edge(source, target, weight=1.0)
+    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.csv'
+    nx.write_pajek(H, path)
+    return send_file(path)
+
+
+@app.route('/')
+def home():
+    return render_template('home.html')
