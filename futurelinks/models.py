@@ -25,8 +25,12 @@ class Stuff(db.Model):
     type = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
-    path = db.Column(db.Text, nullable=False)
+    path = db.Column(db.Text, nullable=False,
+                     default='futurelinks/uploadedNets/')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.type}', '{self.date_posted}',)"
+        return f"Post('{self.title}', '{self.type}', '{self.date_posted}', '{self.path}')"
+
+    def getPath(self):
+        return self.path + self.title

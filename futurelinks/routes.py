@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file
+from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file, abort
 from werkzeug.utils import secure_filename
 from flask import render_template
 from pprint import pprint
@@ -18,10 +18,13 @@ from datetime import datetime
 from futurelinks import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from futurelinks.models import User, Stuff
+from os.path import join, dirname, realpath
+import csv
 
 load_dotenv('.env')
 
-UPLOAD_FOLDER = 'futurelinks/uploadedNets/'
+UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'uploadedNets/')
+
 ALLOWED_EXTENSIONS = {'net', 'txt'}
 APP_URL = os.environ.get('APP_URl')
 # DL_AS_NET_URL = str(os.environ.get('APP_URl')) + '/downloadAsPajet'
@@ -152,9 +155,11 @@ def downloadAsPajet():
         source = G.nodes[int(newConnection['from'])]['label']
         target = G.nodes[int(newConnection['to'])]['label']
         H.add_edge(source, target, weight=1.0)
-    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.net'
+    path = os.path.join(app.config['UPLOAD_FOLDER'],
+                        filename+'FutureLinks'+'.net')
     nx.write_pajek(H, path)
-    return send_file(path)
+    # return jsonify(path)
+    return send_file("uploadedNets/"+filename+'FutureLinks'+'.net')
 
 
 @app.route('/downloadAsCSV', methods=['POST'])
@@ -225,6 +230,191 @@ def logout():
 @login_required
 def account():
     return render_template('account.html', title='Account')
+
+
+@app.route("/upload_graph", methods=['GET', 'POST'])
+@login_required
+def upload_graph():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # if Stuff.query.filter_by(title=file.filename):
+            #     file_save_name = "__" + \
+            #         str(current_user.email) + "__" + file.filename
+            # else:
+            #     file_save_name = str(current_user.email)+"__"+file.filename
+
+            file_save_name = datetime.utcnow().strftime("%Y%d%m%H%m")+filename
+            file.save(os.path.join(
+                app.config['UPLOAD_FOLDER'], file_save_name))
+            originalFile = Stuff(title=file_save_name,
+                                 type="net", user=current_user)
+            db.session.add(originalFile)
+            db.session.commit()
+            initialGraphJson = formatNetwork2(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename))
+            G = linkpred.read_network(os.path.join(
+                app.config['UPLOAD_FOLDER'], filename))
+            H = G.copy()
+            num_loops = nx.number_of_selfloops(G)
+            if num_loops:
+                H.remove_edges_from(nx.selfloop_edges(G))
+
+            CommonNeighbours = mypred.predictors.CommonNeighboursGF(
+                H, excluded=H.edges())
+            CommonNeighbours_results = CommonNeighbours.predict()
+            top = CommonNeighbours_results.top()
+            sentence = []
+            sentenceunsorted = []
+            newLinks = []
+            jsonDict = []
+            # resultsList = []
+            G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+            CommonNeighboursG = mypred.predictors.CommonNeighboursGF(
+                G, excluded=G.edges())
+            CommonNeighbours_resultsG = CommonNeighboursG.predict()
+            topG = CommonNeighbours_resultsG.top()
+            for authors, score in topG.items():
+                authorsArray = [authors[0], authors[1]]
+                common = intersection(
+                    list(G.neighbors(authors[0])), list(G.neighbors(authors[1]))) + authorsArray
+                subG = G.subgraph(common)
+                cngfScore = 0
+                for nodeID, nodeInfo in subG.nodes(data=True):
+
+                    if nodeID not in authorsArray:
+                        cngfScore = cngfScore + \
+                            (subG.degree[nodeID] /
+                             math.log10(G.degree[nodeID]))
+
+                authorOne = G.nodes[authorsArray[1]]
+                authorTwo = G.nodes[authorsArray[0]]
+                sentenceunsorted.append({
+                    "text": authorOne['label'] + " - " + authorTwo['label'] +
+                    "  le score  est :" + str(cngfScore),
+                    "score": cngfScore
+                })
+                newLinks.append({
+                    "from": authorOne['id'],
+                    "to": authorTwo['id'],
+                    "value": float(1.0),
+                    "authOne": authorOne,
+                    "authTwo": authorTwo,
+                    "score": cngfScore
+                })
+            for s in sentenceunsorted:
+                sentence.append(s['text'])
+            for authors, score in top.items():
+                jsonDict.append({
+                    "authorSource": str(authors).split(' - ')[0],
+                    "authorDest": str(authors).split(' - ')[1],
+                    "score": cngfScore
+                })
+            # responseDict = {"results": jsonDict}
+            # return json.dumps(newLinks)
+
+            return render_template('generatedGraph.html',
+                                   newLinks=newLinks,
+                                   predictions=sentence,
+                                   data=initialGraphJson,
+                                   filename=filename)
+        else:
+            flash("format inccorecte, veillez sélectionner un fichier .net valide ")
+            return redirect(request.url)
+    return render_template('upload_graph.html', title='Account')
+
+
+@app.route("/view_file", methods=['GET'])
+@login_required
+def view_file():
+    filename = request.args.get('filename')
+    if Stuff.query.filter_by(title=filename).first():
+        initialGraphJson = formatNetwork2(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename))
+        G = linkpred.read_network(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename))
+        H = G.copy()
+        num_loops = nx.number_of_selfloops(G)
+        if num_loops:
+            H.remove_edges_from(nx.selfloop_edges(G))
+
+        CommonNeighbours = mypred.predictors.CommonNeighboursGF(
+            H, excluded=H.edges())
+        CommonNeighbours_results = CommonNeighbours.predict()
+        top = CommonNeighbours_results.top()
+        sentence = []
+        sentenceunsorted = []
+        newLinks = []
+        jsonDict = []
+        # resultsList = []
+        G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
+        CommonNeighboursG = mypred.predictors.CommonNeighboursGF(
+            G, excluded=G.edges())
+        CommonNeighbours_resultsG = CommonNeighboursG.predict()
+        topG = CommonNeighbours_resultsG.top()
+        for authors, score in topG.items():
+            authorsArray = [authors[0], authors[1]]
+            common = intersection(
+                list(G.neighbors(authors[0])), list(G.neighbors(authors[1]))) + authorsArray
+            subG = G.subgraph(common)
+            cngfScore = 0
+            for nodeID, nodeInfo in subG.nodes(data=True):
+
+                if nodeID not in authorsArray:
+                    cngfScore = cngfScore + \
+                        (subG.degree[nodeID] /
+                         math.log10(G.degree[nodeID]))
+
+            authorOne = G.nodes[authorsArray[1]]
+            authorTwo = G.nodes[authorsArray[0]]
+            sentenceunsorted.append({
+                "text": authorOne['label'] + " - " + authorTwo['label'] +
+                "  le score  est :" + str(cngfScore),
+                "score": cngfScore
+            })
+            newLinks.append({
+                "from": authorOne['id'],
+                "to": authorTwo['id'],
+                "value": float(1.0),
+                "authOne": authorOne,
+                "authTwo": authorTwo,
+                "score": cngfScore
+            })
+        for s in sentenceunsorted:
+            sentence.append(s['text'])
+        for authors, score in top.items():
+            jsonDict.append({
+                "authorSource": str(authors).split(' - ')[0],
+                "authorDest": str(authors).split(' - ')[1],
+                "score": cngfScore
+            })
+        return render_template('viewGraph.html',
+                               newLinks=newLinks,
+                               predictions=sentence,
+                               data=initialGraphJson,
+                               filename=filename)
+    else:
+        abort(404)
+
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Stuff.query.get_or_404(post_id)
+    if post.user != current_user:
+        abort(403)
+    os.remove(post.getPath())
+    db.session.delete(post)
+    db.session.commit()
+    flash('Le fichier a bien été supprimé', 'success')
+    return redirect(url_for('account'))
 
 
 if __name__ == "__main__":

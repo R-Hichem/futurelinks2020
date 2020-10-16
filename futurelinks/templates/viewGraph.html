@@ -211,7 +211,7 @@
         data:{
           attribute: "value",
           newConnections : newConnections,
-          filename: filename,
+          filename: '{{filename}}',
         }
       }).then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
