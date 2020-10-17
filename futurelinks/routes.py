@@ -252,16 +252,15 @@ def upload_graph():
             #     file_save_name = str(current_user.email)+"__"+file.filename
 
             file_save_name = datetime.utcnow().strftime("%Y%d%m%H%m")+filename
-            file.save(os.path.join(
-                app.config['UPLOAD_FOLDER'], file_save_name))
+            file_path = os.path.join(
+                app.config['UPLOAD_FOLDER'], file_save_name)
+            file.save(file_path)
             originalFile = Stuff(title=file_save_name,
                                  type="net", user=current_user)
             db.session.add(originalFile)
             db.session.commit()
-            initialGraphJson = formatNetwork2(os.path.join(
-                app.config['UPLOAD_FOLDER'], filename))
-            G = linkpred.read_network(os.path.join(
-                app.config['UPLOAD_FOLDER'], filename))
+            initialGraphJson = formatNetwork2(file_path)
+            G = linkpred.read_network(file_path)
             H = G.copy()
             num_loops = nx.number_of_selfloops(G)
             if num_loops:
