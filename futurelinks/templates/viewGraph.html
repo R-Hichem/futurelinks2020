@@ -143,6 +143,39 @@
     background: rgb(0, 173, 246); /* Old browsers */
     box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.4);
   }
+
+  /* DivTable.com */
+  .divTable {
+    display: table;
+    width: 100%;
+    margin-bottom: 50px;
+  }
+  .divTableRow {
+    display: table-row;
+  }
+  .divTableHeading {
+    background-color: #eee;
+    display: table-header-group;
+  }
+  .divTableCell,
+  .divTableHead {
+    border: 1px solid #999999;
+    display: table-cell;
+    padding: 3px 10px;
+  }
+  .divTableHeading {
+    background-color: #eee;
+    display: table-header-group;
+    font-weight: bold;
+  }
+  .divTableFoot {
+    background-color: #eee;
+    display: table-footer-group;
+    font-weight: bold;
+  }
+  .divTableBody {
+    display: table-row-group;
+  }
 </style>
 {% endblock extraHead %} {% block content %}
 <div class="mycontainer">
@@ -162,62 +195,90 @@
     <input id="autoComplete" tabindex="1" />
   </div>
   <div class="container__buttons">
-    <button class="btn btn-primary" onclick="fitNetwork()">Rest layout</button>
+    <button class="btn btn-primary" onclick="fitNetwork()">Recadrer</button>
     <button class="btn btn-primary" onclick="togglePhysics()">
       Toggle physics
     </button>
     <button class="btn btn-primary" onclick="downloadFileAsPajet()">
-      Download as .net
+      Télécharger le .net
     </button>
     <button class="btn btn-primary" onclick="downloadFileAsCSV()">
-      Download as .csv
+      Télécharger le .csv
     </button>
   </div>
   <div>
     <div>
-      <ul>
-        {%if newLinks|length >1 %}
-        <h3>Il existe une relation à exploiter entre :</h3>
-        {% for newLink in newLinks %}
-        <li>
-          <div class="author__block">
-            <p
-              class="author__label"
-              onclick="focusNode({{newLink['authOne']['id']}})"
-            >
-              {{newLink['authOne']['label']}}
-            </p>
-            <p class="author__link">==></p>
-            <p
-              class="author__label"
-              onclick="focusNode({{newLink['authTwo']['id']}})"
-            >
-              {{newLink['authTwo']['label']}}
-            </p>
-            avec un score de : <b> {{newLink['score']}}</b>
+      {%if newLinks|length > 0 %}
+      <h3 style="padding: 20px 0">Relations éxploitable:</h3>
+      <div class="divTable">
+        <div class="divTableBody">
+          <div class="divTableRow">
+            <div class="divTableCell"><b>Noeud Source</b></div>
+            <div class="divTableCell"><b>Noeud Destination</b></div>
+            <div class="divTableCell"><b>Score</b></div>
           </div>
-        </li>
-        {% endfor %} {% endif %}
-      </ul>
+          {% for newLink in newLinks %}
+          <div class="divTableRow">
+            <div class="divTableCell">
+              <p
+                class="author__label"
+                onclick="focusNode({{newLink['authOne']['id']}})"
+              >
+                {{newLink['authOne']['label']}}
+              </p>
+            </div>
+            <div class="divTableCell">
+              <p
+                class="author__label"
+                onclick="focusNode({{newLink['authTwo']['id']}})"
+              >
+                {{newLink['authTwo']['label']}}
+              </p>
+            </div>
+            <div class="divTableCell"><b> {{newLink['score']}}</b></div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      <!-- sdfsdfsf -->
     </div>
   </div>
 </div>
 <script type="text/javascript">
           // create an array with nodes
-          var filename = '{{filename}}'.split('.net')[0];
+          var filename = '{{filename}}';
     downloadFileAsPajet = () => {
-    axios.post('https://futurelinks.herokuapp.com/downloadAsPajet',{
+    axios.post('http://localhost:5000/downloadAsPajet',{
         responseType: 'blob', // important
         data:{
           attribute: "value",
           newConnections : newConnections,
-          filename: '{{filename}}',
+          filename: filename,
         }
       }).then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', filename+'FutureLinks.net');
+        document.body.appendChild(link);
+        link.click();
+      });
+  }
+  downloadFileAsCSV = () => {
+    axios.post('http://localhost:5000/downloadAsCSV',{
+        responseType: 'blob', // important
+        data:{
+          attribute: "value",
+          newConnections : newConnections,
+          filename: filename,
+        }
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename+'FutureLinks.csv');
         document.body.appendChild(link);
         link.click();
       });
@@ -404,22 +465,22 @@
       }, 500);
     });
 
-    downloadFileAsCSV = () => {
-    axios.post('{{APP_URL}}/downloadAsCSV',{
-        responseType: 'blob', // important
-        data:{
-          attribute: "value",
-          newConnections : newConnections,
-          filename: '{{filename}}',
-        }
-      }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename+'FutureLinks.csv');
-        document.body.appendChild(link);
-        link.click();
-      });
-  }
+  //   downloadFileAsCSV = () => {
+  //   axios.post('{{APP_URL}}/downloadAsCSV',{
+  //       responseType: 'blob', // important
+  //       data:{
+  //         attribute: "value",
+  //         newConnections : newConnections,
+  //         filename: '{{filename}}',
+  //       }
+  //     }).then((response) => {
+  //       const url = window.URL.createObjectURL(new Blob([response.data]));
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.setAttribute('download', filename+'FutureLinks.csv');
+  //       document.body.appendChild(link);
+  //       link.click();
+  //     });
+  // }
 </script>
 {% endblock content %}

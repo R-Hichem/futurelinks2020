@@ -166,20 +166,15 @@ def downloadAsPajet():
 def downloadAsCSV():
     data = request.json["data"]
     filename = data['filename']
-    G = linkpred.read_network(os.path.join(
-        app.config['UPLOAD_FOLDER'], filename))
-    H = G.copy()
-    num_loops = nx.number_of_selfloops(G)
-    if num_loops:
-        H.remove_edges_from(nx.selfloop_edges(G))
-    G = nx.convert_node_labels_to_integers(H, 1, "default", "label")
-    for newConnection in data['newConnections']:
-        source = G.nodes[int(newConnection['from'])]['label']
-        target = G.nodes[int(newConnection['to'])]['label']
-        H.add_edge(source, target, weight=1.0)
-    path = app.config['UPLOAD_FOLDER'] + filename+'FutureLinks'+'.csv'
-    nx.write_pajek(H, path)
-    return send_file(path)
+    #csv_path = os.path.join(app.config['UPLOAD_FOLDER'], filename+".csv")
+    return send_file("uploadedNets/" + filename + '.csv')
+
+
+@app.route('/fetchCSV', methods=['POST'])
+def fetchCSV():
+    data = request.json["data"]
+    filename = data['filename']
+    return send_file("uploadedNets/"+filename)
 
 
 @app.route('/')
@@ -199,7 +194,7 @@ def register():
                     email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
+        flash('Votre compte a bien été crée ! Vous pouvez vous connecter', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -245,20 +240,13 @@ def upload_graph():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # if Stuff.query.filter_by(title=file.filename):
-            #     file_save_name = "__" + \
-            #         str(current_user.email) + "__" + file.filename
-            # else:
-            #     file_save_name = str(current_user.email)+"__"+file.filename
-
-            file_save_name = datetime.utcnow().strftime("%Y%d%m%H%m")+filename
+            file_save_name = datetime.utcnow().strftime("%Y_%d_%m_%H_%M_%S_")+filename
             file_path = os.path.join(
                 app.config['UPLOAD_FOLDER'], file_save_name)
             file.save(file_path)
             originalFile = Stuff(title=file_save_name,
                                  type="net", user=current_user)
             db.session.add(originalFile)
-            db.session.commit()
             initialGraphJson = formatNetwork2(file_path)
             G = linkpred.read_network(file_path)
             H = G.copy()
@@ -270,6 +258,7 @@ def upload_graph():
                 H, excluded=H.edges())
             CommonNeighbours_results = CommonNeighbours.predict()
             top = CommonNeighbours_results.top()
+            topAll = CommonNeighbours_results.top(0)
             sentence = []
             sentenceunsorted = []
             newLinks = []
@@ -310,20 +299,34 @@ def upload_graph():
                 })
             for s in sentenceunsorted:
                 sentence.append(s['text'])
-            for authors, score in top.items():
+            for authors, score in topAll.items():
                 jsonDict.append({
-                    "authorSource": str(authors).split(' - ')[0],
-                    "authorDest": str(authors).split(' - ')[1],
-                    "score": cngfScore
+                    "authorSource": str(authors).split(' - ')[0].encode("utf-8"),
+                    "authorDest": str(authors).split(' - ')[1].encode("utf-8"),
+                    "score": score
                 })
+
             # responseDict = {"results": jsonDict}
             # return json.dumps(newLinks)
-
+            csv_columns = ['authorSource', 'authorDest', 'score']
+            csv_file = file_path+".csv"
+            try:
+                with open(csv_file, 'w') as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
+                    writer.writeheader()
+                    for data in jsonDict:
+                        writer.writerow(data)
+                CSV_results = Stuff(title=file_save_name +
+                                    ".csv", type="csv", user=current_user)
+                db.session.add(CSV_results)
+            except IOError:
+                print("I/O error")
+            db.session.commit()
             return render_template('generatedGraph.html',
                                    newLinks=newLinks,
                                    predictions=sentence,
                                    data=initialGraphJson,
-                                   filename=filename)
+                                   filename=file_save_name)
         else:
             flash("format inccorecte, veillez sélectionner un fichier .net valide ")
             return redirect(request.url)

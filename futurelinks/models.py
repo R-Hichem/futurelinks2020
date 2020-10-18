@@ -13,10 +13,16 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Stuff', backref='user', lazy=True)
+    posts = db.relationship('Stuff', backref='user', lazy="dynamic")
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
+
+    def getNets(self):
+        return self.posts.filter(Stuff.type == "net").all()
+
+    def getCsv(self):
+        return self.posts.filter(Stuff.type == "csv").all()
 
 
 class Stuff(db.Model):
