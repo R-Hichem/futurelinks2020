@@ -10,6 +10,11 @@
 />
 <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link
+  href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext"
+  rel="stylesheet"
+  type="text/css"
+/>
 <style type="text/css">
   .mycontainer {
     width: 100%;
@@ -159,9 +164,9 @@
   }
   .divTableCell,
   .divTableHead {
-    border: 1px solid #999999;
+    border-bottom: 1px solid #999999;
     display: table-cell;
-    padding: 3px 10px;
+    padding: 15px 15px;
   }
   .divTableHeading {
     background-color: #eee;
@@ -176,9 +181,26 @@
   .divTableBody {
     display: table-row-group;
   }
+
+  .divTableHeader {
+    font-family: Lato;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #5f788a;
+    padding: 20px;
+  }
+  .btn-primary {
+    background-color: #5f788a;
+    border-color: #5f788a;
+  }
 </style>
 {% endblock extraHead %} {% block content %}
 <div class="mycontainer">
+  <div style="display: flex; justify-content: center">
+    <p><b>Nom du fichier : </b></p>
+    <p style="margin: 0 10px">{{filename}}</p>
+  </div>
   <div id="wrapper">
     <div id="mynetwork"></div>
     <div id="loadingBar">
@@ -199,26 +221,41 @@
     <button class="btn btn-primary" onclick="togglePhysics()">
       Toggle physics
     </button>
+    {%if newLinks|length > 0 %}
     <button class="btn btn-primary" onclick="downloadFileAsPajet()">
       Download as .net
     </button>
     <button class="btn btn-primary" onclick="downloadFileAsCSV()">
       Download as .csv
     </button>
+    {% endif %}
   </div>
   <div>
     <div>
       {%if newLinks|length > 0 %}
-      <h3 style="padding: 20px 0">Relations éxploitable:</h3>
+      <h3 style="padding: 20px 0; text-align: center">Prédictions :</h3>
       <div class="divTable">
         <div class="divTableBody">
           <div class="divTableRow">
-            <div class="divTableCell"><b>Noeud Source</b></div>
-            <div class="divTableCell"><b>Noeud Destination</b></div>
-            <div class="divTableCell"><b>Score</b></div>
+            <div
+              class="divTableCell divTableHeader"
+              style="border-top-left-radius: 15px"
+            >
+              <b>Noeud Source</b>
+            </div>
+            <div class="divTableCell divTableHeader">
+              <b>Noeud Destination</b>
+            </div>
+            <div class="divTableCell divTableHeader"><b>Score</b></div>
+            <div
+              class="divTableCell divTableHeader"
+              style="border-top-right-radius: 15px"
+            >
+              <b>Proportion</b>
+            </div>
           </div>
           {% for newLink in newLinks %}
-          <div class="divTableRow">
+          <div class="divTableRow divTableHover">
             <div class="divTableCell">
               <p
                 class="author__label"
@@ -236,11 +273,19 @@
               </p>
             </div>
             <div class="divTableCell"><b> {{newLink['score']}}</b></div>
+            <div class="divTableCell">
+              <b>
+                {{ "%.2f"|format((newLink['score'] / newLinks[0]['score']) *
+                100) }} %</b
+              >
+            </div>
           </div>
 
           {% endfor %}
         </div>
       </div>
+      {% else %}
+      <h1 style="padding: 15px">Aucun lien n'a été prédit !</h1>
       {% endif %}
       <!-- sdfsdfsf -->
     </div>
@@ -373,6 +418,7 @@
           });
 
           focusNode = (id) => {
+            window.scrollTo(0,0)
            network.focus(id ,{
             scale: 1,
             animation: {

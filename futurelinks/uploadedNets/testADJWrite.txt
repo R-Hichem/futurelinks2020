@@ -1,0 +1,333 @@
+#ipykernel_launcher --ip=127.0.0.1 --stdin=9003 --control=9001 --hb=9000 --Session.signature_scheme="hmac-sha256" --Session.key=b"15a9cdea-009c-4ad0-b77c-efcb3e1a6664" --shell=9002 --transport="tcp" --iopub=9004 --f=C:\Users\MoN Pc\AppData\Local\Temp\tmp-16120mlDUMtQUPf8s.json
+# GMT Sun Oct 18 20:38:59 2020
+# 
+Andre�n, Roberto<===>A�nsa, Fernando
+A�nsa, Fernando<===>Naesselund, Gunnar R
+Salom, Rodolfo<===>A�nsa, Fernando
+Kalenberg, �ngel<===>A�nsa, Fernando
+Santos, Mario Nelson<===>A�nsa, Fernando
+Milla, Benito<===>A�nsa, Fernando
+J�ureguy, Julio C�sar<===>A�nsa, Fernando
+Belarra, Nel<===>A�nsa, Fernando
+Garc�a Robles, Hugo<===>A�nsa, Fernando
+Soria<===>A�nsa, Fernando
+Fern�ndez Bertr�n, Salvador<===>A�nsa, Fernando
+Elissalde, Enrique<===>A�nsa, Fernando
+Veciana, Antonio de<===>A�nsa, Fernando
+Catelli, Ra�l<===>Medone, Arnaldo
+Medone, Arnaldo
+Berrueta, Guillermo<===>A�nsa, Fernando
+Sanguinetti, Julio Mar�a<===>A�nsa, Fernando
+Ricci, Julio<===>A�nsa, Fernando<===>Malan de Ricci, Iris
+Naesselund, Gunnar R
+Fierro, Enrique<===>Vitale, Ida
+Vitale, Ida
+Silva Delgado, Adolfo<===>Silva Delgado Graciela
+Silva Delgado Graciela
+Malan de Ricci, Iris<===>Ricci, Julio
+A�nsa Basinski, In�s Carolina<===>A�nsa Basinski, Rodrigo<===>Ana
+A�nsa Basinski, Rodrigo
+Ana
+Ediciones Nacionales C�rculo de Lectores LTDA<===>Barreto, Jaime
+Barreto, Jaime
+A�nsa Royo, Fernando<===>A�nsa, Raquel
+A�nsa, Raquel
+Nieto, Ram�n<===>Argand Degoumois, Carola
+Argand Degoumois, Carola
+Penco, Wilfredo<===>D�az, Jos� Pedro
+D�az, Jos� Pedro
+Sandoval Samayoa, Mario Antonio<===>Ruiz de Sandoval, Mar�a Eugenia
+Ruiz de Sandoval, Mar�a Eugenia
+Cohen, Marcel<===>Cohen, Jacqueline
+Cohen, Jacqueline
+Terlera de Nanni, Irene<===>Rojas, Elena M.
+Rojas, Elena M.
+Mora, Carmen de<===>Barrera L�pez, Trinidad
+Barrera L�pez, Trinidad
+Verdevoye, Paul<===>Verdevoye Sof�a
+Verdevoye Sof�a
+Faille, Aurore<===>Finzi, Paolo
+Finzi, Paolo
+V�zquez, Carmen<===>V�zquez, Edmundo
+V�zquez, Edmundo
+Place, Pierre de<===>Cioran, Emil
+Cioran, Emil
+Minc, Rose<===>McDuffie, Keith
+McDuffie, Keith
+Cymerman, Claude<===>Verdevoye, Paul
+L�pez, �ngel<===>Detrie, Nathalie
+Detrie, Nathalie
+Silveri, A<===>Tenyi, Andres de
+Tenyi, Andres de
+Col�n de Toledo, Celsa<===>Aponte Alsina, Marta<===>Echavarr�a, Arturo<===>Agrait, Fernando
+Aponte Alsina, Marta
+Echavarr�a, Arturo
+Agrait, Fernando
+Soci�t� G�n�rale<===>A�nsa, Fernando
+Chang-Rodr�guez, Raquel<===>Beer, Gabriela de
+Beer, Gabriela de
+Zlotchew, Clark M.<===>Ricci, Julio
+Mel�ndez P�ez, Pedro<===>Jordan, Isolde
+Jordan, Isolde
+Ch�nieux-Gendron, Jacqueline<===>Lefort, Daniel<===>Rivas, Pierre
+Lefort, Daniel
+Rivas, Pierre
+Alianza Editorial S/A<===>Guilloux, B<===>Adlung, Susanne
+Guilloux, B
+Adlung, Susanne
+Par�s i Maicas, Manuel<===>A�nsa, Fernando
+Iacometti, Enrico<===>A�nsa, Fernando
+Grande, F�lix<===>Cort�zar, Julio
+Cort�zar, Julio<===>Rossini, Flaviarossa Nicoletti de<===>Aron, Edith<===>Sj�gren, Jan<===>Rossini Nicoletti, Flaviarosa<===>Chadzy�ska, Zofia<===>Pocatchule, Juri<===>Caillois, Roger<===>Caillois, C.<===>Ch?dzy?ska, Zofia<===>Nicoletti, Flaviarosa<===>L.G.A.
+Lundkvist, Artur<===>Forcat, Julio
+Forcat, Julio
+Boldori, Rosa<===>Onega, Gladys
+Onega, Gladys
+Rossini, Flaviarossa Nicoletti de
+Aron, Edith
+Sj�gren, Jan
+Yates, Donald A.<===>M�ras, Phyllis
+M�ras, Phyllis
+Bail, Jay<===>Flinn, Eugene C
+Flinn, Eugene C
+Julio Cort�zar<===>Sj�gren, Jan
+Rossini Nicoletti, Flaviarosa
+Chadzy�ska, Zofia
+Pocatchule, Juri
+Caillois, Roger
+Caillois, C.
+Ch?dzy?ska, Zofia
+Bishop, Paul<===>Bryan, Courtlandt Dixon Barnes<===>Klaidman, Stephen<===>Maddocks, Melvin<===>Millar, Neil<===>West, Paul
+Bryan, Courtlandt Dixon Barnes
+Klaidman, Stephen
+Maddocks, Melvin
+Millar, Neil
+West, Paul
+Nicoletti, Flaviarosa
+L.G.A.
+Taglialatela Riccio, Alessandra<===>Cort�zar, Julio
+Morelle, Paul<===>Cort�zar, Julio
+Mora Guarnido, Jos�<===>Arena, Domingo<===>Carbonell y Migal, Joyce<===>Fern�ndez R�os, Ovidio<===>Blanco Amor, Eduardo<===>Luisi, Luisa<===>Iba�ez, Roberto<===>Goyena, Alicia<===>Morales Reyes, Esther
+Arena, Domingo
+Carbonell y Migal, Joyce
+Fern�ndez R�os, Ovidio
+Blanco Amor, Eduardo
+Luisi, Luisa
+Iba�ez, Roberto
+Goyena, Alicia
+Mora Guarnido, Rafael<===>Mora Guarnido Mar�a<===>Mora Guarnido, Mar�a<===>Mora Guarnido, Agustina<===>Mora Calvo-Flores, Mariquilla<===>Mora, Jos�<===>Calvo Flores, Mar�a Carmen<===>Mora Guarnido, Marino
+Mora Guarnido Mar�a
+Mora Guarnido, Mar�a<===>Mora Guarnido, Agustina<===>Mora Guarnido Francisco<===>Mora Guarnido, Adelardo<===>Mora Calvo-Flores, Mariquilla<===>Mora Guarnido, Rafael<===>Mora, Paco
+Mora Guarnido, Agustina<===>Mora Guarnido, Mar�a
+G�mez, Roberto<===>Franzini, Luis
+Franzini, Luis
+Mora Guarnido, Adelardo<===>Mora Guarnido, Francisco<===>Mora Calvo-Flores, Mariquilla<===>Mora Guarnido, Mar�a
+Mora Guarnido, Francisco
+Mora Calvo-Flores, Mariquilla
+Mora Guarnido Francisco
+Mora, Jos�
+Sabart�s, Jaime<===>Sabart�s, Mercedes
+Sabart�s, Mercedes
+Morales Reyes, Esther
+Mora, Paco
+Belbey, Jos�<===>Belbey, Anita
+Belbey, Anita<===>Ruiz Daudet, Sara
+Ruiz Daudet, Carlos<===>Ruiz Daudet, Sara
+Ruiz Daudet, Sara
+Calvo Flores, Mar�a Carmen
+Alsina, Eugenio<===>Nardonne, Benito<===>Tommasino, Julio C�sar
+Nardonne, Benito
+Tommasino, Julio C�sar
+Cravotto, Antonio<===>Cravotto, Delma
+Cravotto, Delma<===>Cravotto, Antonio
+Jim�nez de As�a, Luis<===>Jim�nez de As�a, Mercedes
+Jim�nez de As�a, Mercedes
+Frangella, Humberto<===>Alberti, Rafael<===>Salazar, To�o<===>Podest�, Jos� Mar�a
+Alberti, Rafael
+Salazar, To�o
+Podest�, Jos� Mar�a
+Mora Calvo-Flores, Adelardo<===>Mora Guarnido, Rafael<===>Perr�n Chico, Margarita
+Amaro, Jorge<===>Virgili, Orlando
+Virgili, Orlando
+Mora Guarnido, Marino
+R�o, Amelia del<===>R�o, �ngel del
+R�o, �ngel del
+Machado, Antonio<===>Prados, Emilio<===>Garfias, Pedro<===>Champourcin, Ernestina de<===>Domenchina, Juan Jos�<===>Quiroga Pla, Jos� Maria
+Prados, Emilio
+Garfias, Pedro
+Champourcin, Ernestina de
+Domenchina, Juan Jos�
+Quiroga Pla, Jos� Maria
+Bardesio, Orfila<===>Ibarbourou, Juana de<===>Soca Blanco Acevedo, Susana<===>Pitz, Henri Clarence<===>Rodriguez Fabregat, Enrique
+Ibarbourou, Juana de
+Soca Blanco Acevedo, Susana
+Pitz, Henri Clarence
+Rodriguez Fabregat, Enrique
+Carbuccia, Horace de<===>Suarez, Georges<===>Kessel, Joseph
+Suarez, Georges
+Kessel, Joseph
+Dieste, Rafael<===>S�nchez Barbudo, Antonio<===>Gil-Albert, Juan<===>Gaya, Ram�n<===>Altolaguirre, Manuel<===>Serrano Plaja, Arturo<===>Alberti, Rafael
+S�nchez Barbudo, Antonio
+Gil-Albert, Juan
+Gaya, Ram�n
+Altolaguirre, Manuel
+Serrano Plaja, Arturo
+Canito, Enrique<===>Cano, Jos� Luis
+Cano, Jos� Luis
+Mitre, Jorge<===>Cordone, Alberto
+Cordone, Alberto
+Amorim, Enrique<===>Vaptzarov, Nicol�s<===>Pavlova, Liudmila<===>Su�rez, Julio E.<===>Le�n, Max<===>N�sov, Nicol�i<===>Keshokov, Alim
+Vaptzarov, Nicol�s
+Pavlova, Liudmila
+Su�rez, Julio E.
+Le�n, Max
+N�sov, Nicol�i
+Keshokov, Alim
+Mar�as, Juli�n<===>Levillier, Roberto<===>Zolla, El�mire<===>Verbitsky, Bernardo<===>Cahn, Alfredo<===>Reyna, Ferdinando<===>Antequera Azpiri, Pedro<===>Guasta, Eugenio<===>Lafont, Antoine<===>Jofre Ba
+Levillier, Roberto
+Zolla, El�mire
+Verbitsky, Bernardo
+Cahn, Alfredo
+Reyna, Ferdinando
+Antequera Azpiri, Pedro
+Guasta, Eugenio
+Lafont, Antoine
+Jofre Ba
+Cochrane, Frank<===>Beines, Marta<===>Anton, Robert
+Beines, Marta
+Anton, Robert
+Neruda, Pablo<===>Oribe, Emilio
+Oribe, Emilio
+Giudici, Roberto B.<===>Gonz�lez Conzi, Efra�n
+Gonz�lez Conzi, Efra�n
+Mora Lara, Rafael Jos�<===>Coudirat, Gisele Anne
+Coudirat, Gisele Anne
+Perr�n Chico, Margarita
+Guarnido Ru�talo, Mar�a del Carmen<===>Pou Suarez, Gonzalo
+Pou Suarez, Gonzalo
+Giraldi Dei Cas, Norah<===>Belbachir, Catherine<===>Basso, Eleonora<===>Mora Guarnido, Jos�
+Belbachir, Catherine
+Basso, Eleonora
+Silva Valdes, Fern�n<===>Granata, Salvador
+Granata, Salvador
+G�mez de la Serna, Ram�n<===>Alonso, Amado<===>Torre, Guillermo de
+Alonso, Amado
+Torre, Guillermo de
+Silva Per�z, Mercedes<===>Jaurena Cuervo, H�ctor
+Jaurena Cuervo, H�ctor
+Bayce, Julio<===>Maggi, Carlos
+Maggi, Carlos
+Denis Molina, Carlos<===>Barbagelata, H�ctor-Hugo<===>Blanco Pongibove, Gast�n<===>Benedetti, Mario<===>Castro, Manuel de<===>Fingerit, Marcos
+Barbagelata, H�ctor-Hugo
+Blanco Pongibove, Gast�n
+Benedetti, Mario
+Castro, Manuel de
+Fingerit, Marcos
+Blixen, Carlos M.<===>Azzarini, Horacio
+Azzarini, Horacio
+Santos de Roig, Rebeca<===>Acevedo Solano, Emilio
+Acevedo Solano, Emilio
+Ruggia, Clemente<===>Tiribocchi, Amilcar
+Tiribocchi, Amilcar
+Blixen, Sara<===>Delfino, Humberto
+Delfino, Humberto
+Despeyroux, H�ctor H.<===>Larrobla, Salvador
+Larrobla, Salvador
+Escalante, Laura<===>Nieto, Amalia
+Nieto, Amalia
+Ilaria, Juan)<===>Acevedo Solano, Emilio
+Font, Armengol Pedro<===>Montserrat, Mar�a de
+Montserrat, Mar�a de
+Mezzera, Carlos<===>Mezzera, Perla
+Mezzera, Perla
+Carvalho, Adriana<===>Carvalho, Florencia
+Carvalho, Florencia
+Bustos, Mecha<===>Carballo, Norma<===>Harriera, Manuel
+Carballo, Norma
+Harriera, Manuel
+Leborgne, Ra�l Dr.<===>Leborgne, Felix Dr.<===>Leborgne, Jos� H. Dr.
+Leborgne, Felix Dr.
+Leborgne, Jos� H. Dr.
+Director del Centro Cultural Biblioteca Artigas-washington<===>Agregado Cultural de la Embajada de EEUU
+Agregado Cultural de la Embajada de EEUU
+Laterza Rivarola, Eduardo<===>Rios, Edda de los
+Rios, Edda de los
+Podest�, Beatriz<===>Rold�n, Washington<===>Rodr�guez Monegal, Emir<===>Carbajal, Miguel<===>Alsina Thevenet, Homero<===>Rovira, Edmundo<===>Garros, Bernardo
+Rold�n, Washington
+Rodr�guez Monegal, Emir
+Carbajal, Miguel
+Alsina Thevenet, Homero
+Rovira, Edmundo
+Garros, Bernardo
+Teatro 18 de Julio<===>Empresa Nicolas Messuti<===>Messuti Hnos.
+Empresa Nicolas Messuti
+Messuti Hnos.
+Teatro Sol�s<===>Comisi�n de Teatros Municipales<===>Intendencia Municipal de Montevideo
+Comisi�n de Teatros Municipales
+Teatro Oficial Mar�a Guerrero<===>Ministerio de Informaci�n y Turismo
+Ministerio de Informaci�n y Turismo
+Ville de Paris<===>Th��tre Sarah Bernhardt
+Th��tre Sarah Bernhardt
+Comedia Nacional<===>Comisi�n de Teatros Municipales<===>Direcci�n de la Comisi�n de Teatros Municipales<===>Servicio de Teatros Municipal
+Direcci�n de la Comisi�n de Teatros Municipales
+Club de Teatro<===>Federaci�n de Teatros Independientes
+Federaci�n de Teatros Independientes
+Mendiz�bal, Mar�a Ester A. de<===>El Tinglado
+El Tinglado<===>Federaci�n De Teatros Independientes del Uruguay
+Instituci�n Teatral El Galp�n<===>Federaci�n De Teatros Independientes del Uruguay
+Federaci�n De Teatros Independientes del Uruguay
+Centro M�sica y Arte Montevideo<===>Opera Circular Independiente
+Opera Circular Independiente
+Intendencia Municipal de Montevideo<===>Departamento de Hoteles, Casinos y Turismo<===>Servicio de Teatros Municipales<===>Comisi�n de Teatros Municipales
+Departamento de Hoteles, Casinos y Turismo
+Alianza Cultural Uruguay Estados Unidos<===>Biblioteca Artigas-Washington
+Biblioteca Artigas-Washington
+Servicio de Teatros Municipal
+Servicio de Teatros Municipales
+Teatro Valle Incl�n<===>Centro Gallego
+Centro Gallego
+Sala Verdi<===>Intendencia Municipal de Montevideo
+Pauwels, Louis<===>Bergier, Jacques
+Bergier, Jacques
+Rep�blica Oriental del Uruguay<===>Ministerio De Relaciones Exteriores<===>Ministerio De Salud P�blica<===>Biblioteca Nacional
+Ministerio De Relaciones Exteriores
+Pr�fet de Police de Paris<===>R�publique Fran�aise
+R�publique Fran�aise
+Ministerio De Salud P�blica
+Biblioteca Nacional
+Minist�re Des Affaires �trang�res<===>Direction G�n�rale Des Relations Culturelles
+Direction G�n�rale Des Relations Culturelles
+Direction de la Police G�n�rale<===>Pr�fet de Police
+Pr�fet de Police
+Presidencia del Gobierno<===>Direcci�n General de Marruecos y Colonias
+Direcci�n General de Marruecos y Colonias
+Comisi�n Nacional de Bellas Artes<===>Ministerio de Instrucci�n P�blica y Previsi�n Social
+Ministerio de Instrucci�n P�blica y Previsi�n Social
+Direcci�n General del Turismo<===>Patronato Nacional Del Turismo<===>Rep�blica Espa�ola<===>Oficina de Informaci�n en Segovia<===>Junta Provincial Del Turismo<===>Oficina De Informaci�n en �vila<===>Patronato Nacional del Turismo<===>Oficina de Informaci�n en Granada<===>Oficina de Turismo en Santa Cruz de Tenerife
+Patronato Nacional Del Turismo<===>Rep�blica Espa�ola
+Rep�blica Espa�ola
+Direcci�n General del Turismo - Oficina de Informaci�n en Barcelona<===>Patronato Nacional Del Turismo - Rep�blica Espa�ola
+Patronato Nacional Del Turismo - Rep�blica Espa�ola
+Oficina de Informaci�n en Segovia
+Junta Provincial Del Turismo
+Oficina De Informaci�n en �vila
+Patronato Nacional del Turismo<===>Rep�blica Espa�ola<===>Junta Provincial de Turismo<===>Junta Provincial De Turismo De Badajoz
+Oficina de Informaci�n en Granada
+Oficina de Turismo en Santa Cruz de Tenerife
+Polic�a de Montevideo<===>Comisar�a de Tr�nsito
+Comisar�a de Tr�nsito
+Junta Provincial de Turismo
+Junta Provincial De Turismo De Badajoz
+Despouey, Ren� Arturo<===>Dominoni, Emilio
+Dominoni, Emilio
+Larnaudie de Klinger, Mar�a<===>Lockhart, Washington<===>Peduzzi Escuder, Humberto<===>Bordoli, Domingo Luis
+Lockhart, Washington
+Peduzzi Escuder, Humberto
+Bordoli, Domingo Luis
+Howard, Trevor<===>Sutro, John<===>Lahitte, Fernando Oscar
+Sutro, John
+Lahitte, Fernando Oscar
+Marichal, Yamend�<===>Trujillo, Pedro
+Trujillo, Pedro
+Fossati Correa de Giraldi, Delia<===>Giraldi Fossati, Daniel
+Giraldi Fossati, Daniel

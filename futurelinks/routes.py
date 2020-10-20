@@ -268,7 +268,7 @@ def upload_graph():
             CommonNeighboursG = mypred.predictors.CommonNeighboursGF(
                 G, excluded=G.edges())
             CommonNeighbours_resultsG = CommonNeighboursG.predict()
-            topG = CommonNeighbours_resultsG.top()
+            topG = CommonNeighbours_resultsG.top(13)
             for authors, score in topG.items():
                 authorsArray = [authors[0], authors[1]]
                 common = intersection(
@@ -295,7 +295,7 @@ def upload_graph():
                     "value": float(1.0),
                     "authOne": authorOne,
                     "authTwo": authorTwo,
-                    "score": cngfScore
+                    "score":  float("{:.4f}".format(cngfScore))
                 })
             for s in sentenceunsorted:
                 sentence.append(s['text'])
@@ -387,7 +387,7 @@ def view_file():
                 "value": float(1.0),
                 "authOne": authorOne,
                 "authTwo": authorTwo,
-                "score": cngfScore
+                "score": float("{:.2f}".format(cngfScore))
             })
         for s in sentenceunsorted:
             sentence.append(s['text'])
