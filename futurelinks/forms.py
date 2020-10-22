@@ -6,25 +6,26 @@ from futurelinks.models import User
 
 class RegistrationForm(FlaskForm):
     username = StringField('Nom d\'utilisateur',
-                           validators=[DataRequired(), Length(min=2, max=20)])
+                           validators=[DataRequired(), Length(min=5, max=20, message="Le nom d'utilisateur doit être entre 5 et 20 charactères")])
     email = StringField('Email',
-                        validators=[DataRequired(), Email()])
-    password = PasswordField('Mot de passe', validators=[DataRequired()])
+                        validators=[DataRequired(), Email(message="Veillez saisir une adresse email valide !")])
+    password = PasswordField('Mot de passe', validators=[
+                             DataRequired(), Length(min=5, message="Le mot de passe doit contenir au moins 5  charactères")])
     confirm_password = PasswordField('Confirmez le mot de passe',
-                                     validators=[DataRequired(), EqualTo('password')])
+                                     validators=[DataRequired(), EqualTo('password', message="Le mot de passe ne corespond pas !")])
     submit = SubmitField('Inscription')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError(
-                'That username is taken. Please choose a different one.')
+                'Ce nom d\'utilisateur existe déja. Veillez en choisir un autre')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError(
-                'That email is taken. Please choose a different one.')
+                'Cette adresse mail existe déja. Veillez choisir une autre adresse mail')
 
 
 class LoginForm(FlaskForm):

@@ -5,7 +5,9 @@ from flask_login import LoginManager
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'futurelinks/uploadedNets/'
+UPLOAD_FOLDER_CSV = 'futurelinks/uploadedCsv/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER_CSV'] = UPLOAD_FOLDER_CSV
 app.config['SECRET_KEY'] = '3d6f45a5fc12445dbac2f59c3b6c7cb1'
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'

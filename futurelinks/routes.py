@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file, abort
+from flask import Flask, flash, request, redirect, url_for, Response, jsonify, send_file, abort, send_from_directory
 from werkzeug.utils import secure_filename
 from flask import render_template
 from pprint import pprint
@@ -24,6 +24,7 @@ import csv
 load_dotenv('.env')
 
 UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'uploadedNets/')
+UPLOAD_FOLDER_CSV = join(dirname(realpath(__file__)), 'uploadedCsv/')
 
 ALLOWED_EXTENSIONS = {'net', 'txt'}
 APP_URL = os.environ.get('APP_URl')
@@ -43,6 +44,11 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def isCsv(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in {"csv"}
+
+
 @app.route('/graph', methods=['GET', 'POST'])
 def graph():
     if request.method == 'POST':
@@ -51,7 +57,7 @@ def graph():
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash('No selected file')
+            flash('Veillez choisir un fichier')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -236,7 +242,7 @@ def upload_graph():
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash('No selected file')
+            flash('Veillez choisir un fichier')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -417,6 +423,44 @@ def delete_post(post_id):
     db.session.commit()
     flash('Le fichier a bien été supprimé', 'success')
     return redirect(url_for('account'))
+
+
+@app.route("/upload_csv", methods=['POST'])
+@login_required
+def upload_csv():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect("/upload_graph")
+        file = request.files['file']
+        if file.filename == '':
+            flash('Veillez choisir un fichier')
+            return redirect("/upload_graph")
+        if file and isCsv(file.filename):
+            try:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(
+                    app.config['UPLOAD_FOLDER_CSV'], filename))
+                G = nx.read_adjlist(os.path.join(app.config['UPLOAD_FOLDER_CSV'], filename),
+                                    create_using=nx.DiGraph, delimiter=";")
+                nx.write_pajek(G, os.path.join(
+                    app.config['UPLOAD_FOLDER_CSV'], filename + ".net"))
+                # return jsonify({'path': os.path.join(
+                #     app.config['UPLOAD_FOLDER_CSV'], filename + ".net")})
+                try:
+                    network = nx.read_pajek(os.path.join(
+                        app.config['UPLOAD_FOLDER_CSV'], filename + ".net"))
+                except:
+                    flash("CSV non valide !")
+                    return redirect("/upload_graph")
+                return send_file("uploadedCsv/" + filename + ".net", mimetype="text/csv", as_attachment=True)
+            except:
+                flash("CSV non valide !")
+                return redirect("/upload_graph")
+        else:
+            flash("format inccorecte, veillez sélectionner un fichier .csv valide ")
+            return redirect("/upload_graph")
+    return render_template('upload_csv.html', title='Account')
 
 
 if __name__ == "__main__":

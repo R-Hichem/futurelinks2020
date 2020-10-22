@@ -2,3 +2,7 @@ __pycache__
 playground.py
 .gitignore
 futurelinks/Lib
+futurelinks/adjlist.csv
+futurelinks/site.db
+futurelinks/uploadedNets/*
+futurelinks/uploadedCsv/*
