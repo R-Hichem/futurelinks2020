@@ -1,7 +1,14 @@
 {% extends "layout.html" %} {% block content %}
 <div class="content-section">
   <form method="POST" action="">
-    {{ form.hidden_tag() }}
+    {{ form.hidden_tag() }} {% with messages =
+    get_flashed_messages(with_categories=true) %} {% if messages %}
+    <ul class="flashes" style="list-style: none">
+      {% for category, message in messages %} {% if category=="danger" %}
+      <li><h3 style="color: red; font-weight: bold">{{ message }}</h3></li>
+      {% endif %} {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">Connexion</legend>
       <div class="form-group">

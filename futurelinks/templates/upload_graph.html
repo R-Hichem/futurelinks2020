@@ -1,10 +1,12 @@
 {% extends "layout.html" %} {% block content %}
 <div style="display: flex; flex-direction: column; justify-content: center; margin: 10%;">
-  {% with messages = get_flashed_messages() %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   <ul class=flashes style="list-style: none;">
-  {% for message in messages %}
+  {% for category, message in messages %}
+  {% if category=="netErrors" %}
     <li> <h3 style="color:red; font-weight: bold;" > {{ message }} </h3></li>
+  {% endif %}
   {% endfor %}
   </ul>
   {% endif %}

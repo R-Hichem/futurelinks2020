@@ -217,7 +217,8 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
+            flash(
+                'Informations de Connexion incorrecte, veuillez vérifier vos identifiants', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 
@@ -238,11 +239,11 @@ def account():
 def upload_graph():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('No file part')
+            flash('No file part', 'netErrors')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash('Veillez choisir un fichier')
+            flash('Veillez choisir un fichier', 'netErrors')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -334,7 +335,8 @@ def upload_graph():
                                    data=initialGraphJson,
                                    filename=file_save_name)
         else:
-            flash("format inccorecte, veillez sélectionner un fichier .net valide ")
+            flash(
+                "format inccorecte, veillez sélectionner un fichier .net valide ", 'netErrors')
             return redirect(request.url)
     return render_template('upload_graph.html', title='Account')
 
@@ -430,11 +432,11 @@ def delete_post(post_id):
 def upload_csv():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('No file part')
+            flash('No file part', 'netErrors')
             return redirect("/upload_graph")
         file = request.files['file']
         if file.filename == '':
-            flash('Veillez choisir un fichier')
+            flash('Veillez choisir un fichier', 'netErrors')
             return redirect("/upload_graph")
         if file and isCsv(file.filename):
             try:
@@ -451,14 +453,15 @@ def upload_csv():
                     network = nx.read_pajek(os.path.join(
                         app.config['UPLOAD_FOLDER_CSV'], filename + ".net"))
                 except:
-                    flash("CSV non valide !")
+                    flash("CSV non valide !", 'netErrors')
                     return redirect("/upload_graph")
                 return send_file("uploadedCsv/" + filename + ".net", mimetype="text/csv", as_attachment=True)
             except:
-                flash("CSV non valide !")
+                flash("CSV non valide !", 'netErrors')
                 return redirect("/upload_graph")
         else:
-            flash("format inccorecte, veillez sélectionner un fichier .csv valide ")
+            flash(
+                "format inccorecte, veillez sélectionner un fichier .csv valide ", 'netErrors')
             return redirect("/upload_graph")
     return render_template('upload_csv.html', title='Account')
 
