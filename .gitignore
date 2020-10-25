@@ -3,4 +3,3 @@ playground.py
 .gitignore
 futurelinks/Lib
 futurelinks/adjlist.csv
-futurelinks/site.db
