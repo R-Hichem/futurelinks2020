@@ -295,7 +295,7 @@
           // create an array with nodes
           var filename = '{{filename}}';
     downloadFileAsPajet = () => {
-    axios.post('http://localhost:5000/downloadAsPajet',{
+    axios.post(window.location.origin+'/downloadAsPajet',{
         responseType: 'blob', // important
         data:{
           attribute: "value",
@@ -312,7 +312,7 @@
       });
   }
   downloadFileAsCSV = () => {
-    axios.post('http://localhost:5000/downloadAsCSV',{
+    axios.post(window.location.origin+'/downloadAsCSV',{
         responseType: 'blob', // important
         data:{
           attribute: "value",

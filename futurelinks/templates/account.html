@@ -177,7 +177,7 @@
 <script>
   downloadCSV = (filename) => {
     axios
-      .post("http://localhost:5000/fetchCSV", {
+      .post(window.location.origin + "/fetchCSV", {
         responseType: "blob", // important
         data: {
           filename: filename,
