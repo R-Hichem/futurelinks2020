@@ -197,7 +197,7 @@ def register():
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         if(User.query.count() > 0):
-            newID = Stuff.query.all()[-1].id + 1
+            newID = User.query.all()[-1].id + 1
         else:
             newID = 1
         user = User(username=form.username.data,
