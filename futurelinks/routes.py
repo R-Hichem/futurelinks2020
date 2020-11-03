@@ -196,7 +196,10 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
-        newID = User.query.all()[-1].id + 1
+        if(User.query.count() > 0):
+            newID = Stuff.query.all()[-1].id + 1
+        else:
+            newID = 1
         user = User(username=form.username.data,
                     email=form.email.data, password=hashed_password, id=newID)
         db.session.add(user)
@@ -252,7 +255,10 @@ def upload_graph():
             file_path = os.path.join(
                 app.config['UPLOAD_FOLDER'], file_save_name)
             file.save(file_path)
-            newID = Stuff.query.all()[-1].id + 1
+            if(Stuff.query.count() > 0):
+                newID = Stuff.query.all()[-1].id + 1
+            else:
+                newID = 1
             originalFile = Stuff(title=file_save_name,
                                  type="net", user=current_user, id=newID)
             db.session.add(originalFile)
@@ -325,7 +331,10 @@ def upload_graph():
                     writer.writeheader()
                     for data in jsonDict:
                         writer.writerow(data)
-                newID = Stuff.query.all()[-1].id + 1
+                if(Stuff.query.count() > 0):
+                    newID = Stuff.query.all()[-1].id + 1
+                else:
+                    newID = 1
                 CSV_results = Stuff(title=file_save_name +
                                     ".csv", type="csv", user=current_user, id=newID)
                 db.session.add(CSV_results)
