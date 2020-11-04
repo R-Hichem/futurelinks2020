@@ -12,10 +12,10 @@
   {% endif %}
   {% endwith %}
 <div >
-<h1>Ajouter un graphe</h1>
+<h1 style="padding: 15px 0">Ajouter un graphe</h1>
 <form method=post enctype=multipart/form-data>
   <input type=file name=file>
-  <input type=submit value=Confirmer>
+  <input class="btn btn-primary" type=submit value=Confirmer style="background-color: #5f788a;">
 </form>
 </div>
 
@@ -23,10 +23,10 @@
 
 <div style="margin-top: 50px;">
 
-<h1>Transformer un csv en graphe</h1>
+<h1 style="padding: 15px 0">Transformer un csv en graphe</h1>
 <form method=post enctype=multipart/form-data action="/upload_csv">
   <input type=file name=file>
-  <input type=submit value=Confirmer>
+  <input class="btn btn-primary" type=submit value=Confirmer style="background-color: #5f788a;">
 </form>
 </div>
 

@@ -30,9 +30,28 @@
     {% else %}
     <title>Future Links</title>
     {% endif %}
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Merriweather:700);
+      body {
+        margin-top: 0;
+      }
+      h1 {
+        font-size: 4em;
+        color: white;
+        font-family: "Merriweather", serif;
+        letter-spacing: 2px;
+        pointer-events: none;
+        font-weight: 700;
+        position: absolute;
+        top: 40%;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <header class="site-header">
+    <header>
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Future Links</a>
@@ -74,17 +93,13 @@
         </div>
       </nav>
     </header>
-    <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-12">
-          {# {% with messages = get_flashed_messages(with_categories=true) %} {%
-          if messages %} {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">{{ message }}</div>
-          {% endfor %} {% endif %} {% endwith %} #} {% block content %} {%
-          endblock%}
-        </div>
-      </div>
-    </main>
+    <div>
+      {# {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %} #} {% block content %} {%
+      endblock%}
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

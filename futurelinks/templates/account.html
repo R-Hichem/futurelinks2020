@@ -5,7 +5,7 @@
 <div class="myFiles">
   <h1>Historique</h1>
   <div>
-    {% if current_user.posts %}
+    {% if current_user.posts.count() > 0 %}
     <div
       class="historique__container"
       style="display: flex; justify-content: space-around"
@@ -169,7 +169,9 @@
       <!-- END CSV CONTAINER -->
     </div>
     {% else %}
-    <h2>Vous n'avez aucun fichier pour l'instant !</h2>
+    <h2 style="text-align: center">
+      Vous n'avez aucun fichier pour l'instant !
+    </h2>
     {% endif %}
   </div>
 </div>

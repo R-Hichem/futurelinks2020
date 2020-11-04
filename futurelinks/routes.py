@@ -26,7 +26,7 @@ load_dotenv('.env')
 UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'uploadedNets/')
 UPLOAD_FOLDER_CSV = join(dirname(realpath(__file__)), 'uploadedCsv/')
 
-ALLOWED_EXTENSIONS = {'net', 'txt'}
+ALLOWED_EXTENSIONS = {'net'}
 APP_URL = os.environ.get('APP_URl')
 # DL_AS_NET_URL = str(os.environ.get('APP_URl')) + '/downloadAsPajet'
 
@@ -202,7 +202,7 @@ def register():
         db.session.commit()
         flash('Votre compte a bien été crée ! Vous pouvez vous connecter', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Inscription', form=form)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -219,7 +219,7 @@ def login():
         else:
             flash(
                 'Informations de Connexion incorrecte, veuillez vérifier vos identifiants', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', title='Connexion', form=form)
 
 
 @app.route("/logout")
@@ -231,7 +231,7 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    return render_template('account.html', title='Historique')
 
 
 @app.route("/upload_graph", methods=['GET', 'POST'])
@@ -338,7 +338,7 @@ def upload_graph():
             flash(
                 "format inccorecte, veillez sélectionner un fichier .net valide ", 'netErrors')
             return redirect(request.url)
-    return render_template('upload_graph.html', title='Account')
+    return render_template('upload_graph.html', title='Upload')
 
 
 @app.route("/view_file", methods=['GET'])
